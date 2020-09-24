@@ -1,0 +1,52 @@
+CSCC11 - Introduction to Machine Learning, Fall 2020, Assignment 1
+B. Chan, S. Wei, D. Fleet
+
+===========================================================
+
+ COMPLETE THIS TEXT BOX:
+
+ Student Name: Zhe Fan Li
+ Student number: 1005057368
+ UtorID: lizhe20
+
+ I hereby certify that the work contained here is my own
+
+
+ _______Jefferson Li_____________
+ (sign with your name)
+
+===========================================================
+
+For the following questions, please answer concisely in bullet points.
+
+Q1: Dataset Size
+- If I increase the size of the training set, what can we expect about the model's
+  training error? What about the test error?
+  - I can expect the training error to increase
+  - I can expect the test error to decrease
+  - I can expect the 2 errors to converge
+- If I increase the size of the test set, what can we expect the about the model's
+  training error? What about the test error?
+  - I can expect my training error to remain relatively unchanged
+  - I can expect my test error to increase
+- How much data should I try to obtain if I want to build a good model?
+  - as much as possible
+
+Q2: Model Complexity
+- If the model is too simple, what can we conclude about the training and test errors?
+  - both training and test errors are relatively high
+- If the model is too complex, what can we conclude about the training and test errors?
+  - training error will decrease as the model will start to model the noise, but test error will increase drastically
+- Which (degree) model gives the best performance? How did you find out?
+  - degree 3 gives the best performance, I found out by comparing the error graphs, and recognizing that degree 3 consistently gives a good, if not best, performance
+- What degree of polynomial do you think was used to generate the data?
+  - degree 3 
+
+Q3: Regularization
+- What does regularization do to the weights? Note: You may want to look at the weight values.
+  - regularization decreases weight values to promote smoothness of the model
+- If we set lambda (l2_coef) to 0, what do we get?
+  - we get the model without regularization
+- What does increasing lambda (l2_coef) do to our loss function?
+  - punishes unsmoothness more
+  - generally decrease error 
