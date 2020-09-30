@@ -88,13 +88,14 @@ class RBFRegression():
         assert X.shape[1] == 2, f"Each input should contain two components. Got: {X.shape[1]}"
 
         # ====================================================
-        def getB(x, index):
-            return np.exp([-(np.linalg.norm(x - self.centers[index]) ** 2) / (2 * self.widths[index] ** 2)])[0]
-        def predictSingle(base, index=self.K, s=0):
-            if index == 0:
-                return s + self.parameters[0]
-            return predictSingle(base, index - 1, s + self.parameters[index] * getB(base, index - 1))
-        return list(map(predictSingle, X))
+        A = np.tile(X[np.newaxis, :], self.K).reshape(X.shape[0], self.K, 2)
+        centers = self.centers[np.newaxis, :].reshape(1, self.K, 2)
+        num = (-1 * np.add.reduce((A - centers) ** 2, 2)).reshape(1, X.shape[0], self.K)
+        exp = num / (2 * self.widths ** 2).transpose()
+        fin = np.where(True, np.e ** exp, None)
+        bCols = fin.transpose().reshape(self.K, X.shape[0])
+        params = self.parameters.transpose()[:, 1:]
+        return (params @ bCols + np.ones(X.shape[0])*self.parameters[0]).astype(float)
         # ====================================================
     
     def fit_with_l2_regularization(self, train_X, train_Y, l2_coef):
@@ -115,14 +116,14 @@ class RBFRegression():
 
         # ====================================================
         # TODO: Implement your solution within the box
-        def getB(i, j):
-            return np.exp([-(np.linalg.norm(train_X[i] - self.centers[j])**2)/(2*self.widths[j]**2)])[0]
+        A = np.tile(train_X[np.newaxis, :], self.K).reshape(train_X.shape[0], self.K, 2)
+        B = self.centers[np.newaxis, :].reshape(1, self.K, 2)
+        numerator = -1*np.add.reduce((A - B)**2, 2)
+        exp = numerator / (2*self.widths**2).transpose()
+        fin = np.where(True, np.e**exp, None)
+
         b = np.hstack((np.ones((train_X.shape[0], 1)),
-                       np.fromfunction(
-                           np.vectorize(getB),
-                           (train_X.shape[0], self.K),
-                           dtype=int)
-                       ))
+                       fin)).astype(float)
         self.parameters = np.linalg.inv(b.T @ b + l2_coef * np.eye(self.K + 1)) @ (
                 b.T @ train_Y)  # apply closed form
 

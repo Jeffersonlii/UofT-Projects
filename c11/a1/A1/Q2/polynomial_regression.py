@@ -64,11 +64,11 @@ class PolynomialRegression:
         assert X.shape == (X.shape[0], 1)
 
         # ====================================================
-        def predictSingle(base: int, exponent=self.K, s=0):
-            if exponent == 0:
-                return s + self.parameters[0]
-            return predictSingle(base, exponent - 1, s + self.parameters[exponent] * base ** exponent)
-        return list(map(predictSingle, X))
+        A = np.fromfunction(np.vectorize(lambda i, j, z: (X[j] ** (z + 1))), (1, train_X.shape[0], self.K), dtype=int)
+        bCols = A.transpose().reshape(self.K, X.shape[0])
+        params = self.parameters.transpose()[:, 1:]
+        return (params @ bCols + np.ones(X.shape[0]) * self.parameters[0]).transpose()
+
         # ====================================================
 
     def fit(self, train_X, train_Y):
