@@ -64,7 +64,7 @@ class PolynomialRegression:
         assert X.shape == (X.shape[0], 1)
 
         # ====================================================
-        A = np.fromfunction(np.vectorize(lambda i, j, z: (X[j] ** (z + 1))), (1, train_X.shape[0], self.K), dtype=int)
+        A = np.vander(X.ravel(), self.K + 1, increasing=True)[:, 1:]
         bCols = A.transpose().reshape(self.K, X.shape[0])
         params = self.parameters.transpose()[:, 1:]
         return (params @ bCols + np.ones(X.shape[0]) * self.parameters[0]).transpose()
@@ -89,13 +89,7 @@ class PolynomialRegression:
                    0] >= self.K, f"require more data points to fit a polynomial (train_X: {train_X.shape}, K: {self.K}). Do you know why?"
 
         # ====================================================
-        b = np.hstack((np.ones((train_X.shape[0], 1)),
-                       np.fromfunction(
-                           np.vectorize(lambda i, j: (train_X[i]) ** (j + 1)),
-                           (train_X.shape[0], self.K),
-                           dtype=int)
-                       ))
-
+        b = np.vander(train_X.ravel(), self.K + 1, increasing=True)
         self.parameters = np.linalg.inv(b.T @ b) @ (b.T @ train_Y)  # apply closed form
         # ====================================================
 
@@ -119,12 +113,7 @@ class PolynomialRegression:
                                                                     1), f"input and/or output has incorrect shape (train_X: {train_X.shape}, train_Y: {train_Y.shape})."
 
         # ====================================================
-        b = np.hstack((np.ones((train_X.shape[0], 1)),
-                       np.fromfunction(
-                           np.vectorize(lambda i, j: (train_X[i]) ** (j + 1)),
-                           (train_X.shape[0], self.K),
-                           dtype=int)
-                       ))
+        b = np.vander(train_X.ravel(), self.K + 1, increasing=True)
         self.parameters = np.linalg.inv(b.T @ b + l2_coef * np.eye(self.K + 1)) @ (
                 b.T @ train_Y)  # apply closed form
         # ====================================================
