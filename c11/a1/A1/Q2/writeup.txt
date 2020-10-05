@@ -22,12 +22,11 @@ For the following questions, please answer concisely in bullet points.
 Q1: Dataset Size
 - If I increase the size of the training set, what can we expect about the model's
   training error? What about the test error?
-  - I can expect the training error to increase
-  - I can expect the test error to decrease
-  - I can expect the 2 errors to converge
+  - I can expect the training error to increase or stay relatively unchanged
+  - I can expect the test error to decrease dramatically
 - If I increase the size of the test set, what can we expect the about the model's
   training error? What about the test error?
-  - I can expect my training error to remain relatively unchanged
+  - I can expect my training error to remain unchanged
   - I can expect my test error to increase
 - How much data should I try to obtain if I want to build a good model?
   - as much as possible
@@ -35,13 +34,29 @@ Q1: Dataset Size
 Q2: Model Complexity
 - If the model is too simple, what can we conclude about the training and test errors?
   - both training and test errors are relatively high
+  - for training data, the simplest model yields the highest error
+  - test error is relatively high, but the error is much higher when the model gets too complex and ungeneralized
 - If the model is too complex, what can we conclude about the training and test errors?
   - training error will decrease as the model will start to model the noise, but test error will increase drastically
 - Which (degree) model gives the best performance? How did you find out?
-  - degree 3 gives the best performance, I found out by comparing the error graphs, and recognizing that degree 3 consistently gives a good, if not best, performance
-- What degree of polynomial do you think was used to generate the data?
-  - degree 3 
+  - Dataset 1
+    - degree 3 gives the best performance, this is because degree 3 performs consistently well between the small and large dataset.
+          In contrary, other degrees such as 3 performs slightly better on the large dataset but much worse on the small dataset
+  - Dataset 2
+    - degree 2 gives the best performance, this is because degree 2 has the best performance on the small dataset,
+        while its performance on the large dataset is relatively equivalent to high degrees
+  - Dataset 3
+    - degree 5 gives the best performance, this is because degree 5 has far best the performance on the small dataset,
+        while its performance on the large dataset is relatively equivalent or greater than other degrees
 
+- What degree of polynomial do you think was used to generate the data?
+  - Dataset 1
+    - degree 3
+  - Dataset 2
+    - degree 2
+  - Dataset 3
+    - degree 5
+    
 Q3: Regularization
 - What does regularization do to the weights? Note: You may want to look at the weight values.
   - regularization decreases weight values to promote smoothness of the model
@@ -49,4 +64,5 @@ Q3: Regularization
   - we get the model without regularization
 - What does increasing lambda (l2_coef) do to our loss function?
   - punishes unsmoothness more
-  - generally decrease error 
+  - generally decrease error
+  - decrease the noise's effect on the model

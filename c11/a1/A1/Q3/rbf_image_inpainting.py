@@ -163,12 +163,13 @@ if __name__ == "__main__":
 
     # The color need to be filled, you could modify it to suit your own test cases
     # The array specifies the RGB, integers ranging from 0 to 255.
+
     fill_rgb = np.array([255, 0, 0])
     spacing = 3
     width = 2
-    l2_coef = 0.5
-
-    im_rec = RBF_image_inpainting(image_name, fill_rgb, spacing, width, l2_coef)
-
+    l2_coef = 10
+    patch_size = 5
+    tolerance = 0.001
+    im_rec = RBF_image_inpainting(image_name, fill_rgb, spacing, width, l2_coef, patch_size, tolerance)
     plt.imshow(im_rec)
     plt.show()

@@ -95,7 +95,7 @@ class RBFRegression():
         fin = np.where(True, np.e ** exp, None)
         bCols = fin.transpose().reshape(self.K, X.shape[0])
         params = self.parameters.transpose()[:, 1:]
-        return (params @ bCols + np.ones(X.shape[0])*self.parameters[0]).astype(float)
+        return (params @ bCols + np.ones(X.shape[0])*self.parameters[0]).transpose().astype(float)
         # ====================================================
     
     def fit_with_l2_regularization(self, train_X, train_Y, l2_coef):
@@ -126,7 +126,6 @@ class RBFRegression():
                        fin)).astype(float)
         self.parameters = np.linalg.inv(b.T @ b + l2_coef * np.eye(self.K + 1)) @ (
                 b.T @ train_Y)  # apply closed form
-
         # ====================================================
 
         assert self.parameters.shape == (self.K + 1, 1)
