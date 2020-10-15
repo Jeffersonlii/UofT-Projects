@@ -19,7 +19,10 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="102b1ff6-c267-4b6f-a9d7-68957fde583e" name="Default Changelist" comment="" />
+    <list default="true" id="102b1ff6-c267-4b6f-a9d7-68957fde583e" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/A1/Q3/rbf_image_inpainting.py" beforeDir="false" afterPath="$PROJECT_DIR$/A1/Q3/rbf_image_inpainting.py" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -39,9 +42,9 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="ToolWindowSciView.ShowToolbar" value="false" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$USER_HOME$/Desktop" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../a2/A2" />
   </component>
-  <component name="RunManager" selected="Python.compare_model_complexity">
+  <component name="RunManager" selected="Python.compare_regularization">
     <configuration default="true" type="PythonConfigurationType" factoryName="Python">
       <module name="a1" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -90,6 +93,9 @@
       <module name="a1" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
       <option name="SDK_HOME" value="" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/A1/Q2" />
       <option name="IS_MODULE_SDK" value="true" />
@@ -173,10 +179,10 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.compare_model_complexity" />
-        <item itemvalue="Python.rbf_image_inpainting" />
-        <item itemvalue="Python.rbf_regression" />
         <item itemvalue="Python.compare_regularization" />
+        <item itemvalue="Python.rbf_image_inpainting" />
+        <item itemvalue="Python.compare_model_complexity" />
+        <item itemvalue="Python.rbf_regression" />
         <item itemvalue="Python.compare_dataset_size" />
       </list>
     </recent_temporary>
@@ -194,6 +200,9 @@
       <workItem from="1601689954949" duration="3346000" />
       <workItem from="1601843496223" duration="7049000" />
       <workItem from="1601937777479" duration="2238000" />
+      <workItem from="1602021336803" duration="2934000" />
+      <workItem from="1602441768565" duration="94000" />
+      <workItem from="1602441895373" duration="268000" />
     </task>
     <servers />
   </component>
@@ -217,10 +226,14 @@
       <screen x="0" y="0" width="1920" height="1050" />
     </state>
     <state x="414" y="180" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1920.1050/-1920.130.1920.1050@0.0.1920.1050" timestamp="1601419393708" />
-    <state x="740" y="265" key="FileChooserDialogImpl" timestamp="1601850104501">
+    <state x="640" y="261" key="#com.intellij.openapi.updateSettings.impl.PluginUpdateInfoDialog" timestamp="1602441812134">
       <screen x="0" y="0" width="1920" height="1050" />
     </state>
-    <state x="740" y="265" key="FileChooserDialogImpl/0.0.1920.1050/-1920.130.1920.1050@0.0.1920.1050" timestamp="1601850104501" />
+    <state x="640" y="261" key="#com.intellij.openapi.updateSettings.impl.PluginUpdateInfoDialog/0.0.1920.1050/-1920.130.1920.1050@0.0.1920.1050" timestamp="1602441812134" />
+    <state x="740" y="265" key="FileChooserDialogImpl" timestamp="1602442162555">
+      <screen x="0" y="0" width="1920" height="1050" />
+    </state>
+    <state x="740" y="265" key="FileChooserDialogImpl/0.0.1920.1050/-1920.130.1920.1050@0.0.1920.1050" timestamp="1602442162555" />
     <state width="1877" height="352" key="GridCell.Tab.0.bottom" timestamp="1601448426460">
       <screen x="0" y="0" width="1920" height="1050" />
     </state>

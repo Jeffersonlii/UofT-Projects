@@ -1,0 +1,15 @@
+"""
+CSCC11 - Introduction to Machine Learning, Fall 2020, Assignment 2
+B. Chan, E. Franco, D. Fleet
+"""
+
+1. Can you reach a high accuracy on the test set using random forests? 
+No, all variations of the hyperperamaters results in a test accuracy of less than 20%
+
+2. Can you think of a better way to choose split functions as opposed to the method in _find_split?
+Instead of univariate split functions, we could instead use multivariate split functions to better fit the data.
+Although multivariate split functions would take much longer to train.
+
+3. How does this challenge differ from that with the occupancy dataset?
+occupancy dataset has ~6 times the training data of the amazon dataset.
+The lack of training data makes the amazon much harder to train

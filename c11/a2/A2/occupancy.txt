@@ -1,0 +1,19 @@
+"""
+CSCC11 - Introduction to Machine Learning, Fall 2020, Assignment 2
+B. Chan, E. Franco, D. Fleet
+"""
+
+1. Is a single DT prone to over-fitting with the occupancy dataset?
+Yes, Compared to 100 decision trees, a single DT performed much worse.
+On half the seeds, single DT had a test Accuracy of mid 80 percent,
+while training with 100 DTs had a test accuracy of above 95% for all seeds.
+This is indicative that training with a single DT is prone to over-fitting, and generalizes worse than using more trees.
+
+2. How does classification accuracy behave as a function of the number of trees?
+As we increase the number of trees, test accuracy tends to increase linearly
+
+3. Do you think the random forest was helpful?  Explain.
+Yes, random forest was helpful.
+Random forest out performs in test accuracy on average.
+Therefore Random forest generalizes better and filters out more noise
+
