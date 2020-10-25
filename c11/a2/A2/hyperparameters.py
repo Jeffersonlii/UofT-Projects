@@ -11,10 +11,10 @@ algorithm.
 # TODO: Use Validation Set to Tune hyperparameters for the Amazon dataset
 # Use Optimal Parameters to get good accuracy on Test Set
 AMAZON_HYPERPARAMETERS = {
-    "num_trees": 10,
-    "features_percent": 0.4,
-    "data_percent": 1,
-    "max_depth": 100,
+    "num_trees": 20,
+    "features_percent": 1,
+    "data_percent": 0.5,
+    "max_depth": 10,
     "min_leaf_data": 1,
     "min_entropy": 0.1,
     "num_split_retries": 10
@@ -25,7 +25,7 @@ AMAZON_HYPERPARAMETERS = {
 # TODO: Use Validation Set to Tune hyperparameters for the Occupancy dataset
 # Use Optimal Parameters to get good accuracy on Test Set
 OCCUPANCY_HYPERPARAMETERS = {
-    "num_trees": 3,
+    "num_trees": 10,
     "features_percent": 1,
     "data_percent": 1,
     "max_depth": 10,

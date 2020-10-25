@@ -12,4 +12,5 @@ Although multivariate split functions would take much longer to train.
 
 3. How does this challenge differ from that with the occupancy dataset?
 occupancy dataset has ~6 times the training data of the amazon dataset.
-The lack of training data makes the amazon much harder to train
+
+Therefore I train with more trees than occupancy dataset to better filter out the noise of less data

@@ -20,7 +20,6 @@ def main(final_hyperparameters):
 
     train_X = amazon_data['Xtr'].toarray()
     train_y = amazon_data['Ytr'].toarray()
-    print(len(train_X))
 
     test_X, test_y = None, None
     if final_hyperparameters:
