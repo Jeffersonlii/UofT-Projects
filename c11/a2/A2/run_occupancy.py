@@ -32,7 +32,7 @@ def main(final_hyperparameters):
         test_y = occupancy_data['Yte2']
 
     # You can try different seeds and check the model's performance!
-    seeds = np.random.RandomState(0).randint(low=0, high=65536, size=(10))
+    seeds = np.random.RandomState(0).randint(low=0, high=65536, size=(1))
 
     train_accuracies = []
     validation_accuracies = []

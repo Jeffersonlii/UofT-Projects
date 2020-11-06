@@ -13,4 +13,9 @@ Although multivariate split functions would take much longer to train.
 3. How does this challenge differ from that with the occupancy dataset?
 occupancy dataset has ~6 times the training data of the amazon dataset.
 
-Therefore I train with more trees than occupancy dataset to better filter out the noise of less data
+1) num trees - since occupancy dataset has ~6 times the training data of the amazon dataset,
+ I train with more trees to better filter out the noise of less data
+2) feature percent - since I have less data, I train with less features per tree to filterout noise
+3) data_percent - since I have less data, I want to use more data_percent.
+ So I train with the maximum amount of data I have
+4) I train with a deeper max depth than occupancy as I noticed  this helps the validation accuracy
