@@ -1,0 +1,34 @@
+"""
+CSCC11 - Introduction to Machine Learning, Fall 2020, Assignment 3
+B. Chan, Z. Zhang, D. Fleet
+"""
+
+Answer The Following Questions:
+
+Visualization:
+1. Do you expect logistic regression to perform well on generic_1? Why?
+#todo
+
+2. Do you expect logistic regression to perform well on generic_2? Why?
+
+
+3. Why can’t we directly visualize the iris dataset? What are some ways to visualize it?
+We can not directly visualize the iris dataset as a 2d scatter plot can not handle 4 dimensional inputs.
+We can visualize the iris dataset by having a 3d scatterplot to handle 3 of the 4 input dimensions, then having the 4th
+dimension represented by the size of the data point.
+then we can use the color of the datapoint to represent the 1d output.
+
+
+Analysis:
+1. Generic datasets: Does logistic regression perform well on these datasets? Do the actual results agree with your initial hypotheses?
+
+
+2. Iris dataset: Does logistic regression do well on this dataset? If not, does regularization help? 
+
+
+3. What are the training and validation accuracies? Do they look reasonable? Explain.
+
+
+Bonus: If your initial hypothesis disagrees with the result on generic_1 dataset, can you explain why that is the case?
+
+
