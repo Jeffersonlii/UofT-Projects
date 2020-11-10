@@ -54,7 +54,7 @@ class LogisticRegression:
     def _compute_loss_and_gradient(self, X, y, alpha_inverse=0, beta_inverse=0):
         """ This computes the negative log likelihood (NLL) and the gradient of NLL.
 
-        NOTE: For the L2 term, drop all the log constant terms and cosntant factor.
+        NOTE: For the L2 term, drop all the log constant terms and constant factor.
               For the NLL term, divide by the number of data points (i.e. we are taking the mean).
               The new loss should take the form:
                   E_new(w) = (NLL_term / N) + L2_term
@@ -73,26 +73,50 @@ class LogisticRegression:
         - grad (ndarray (shape: (K, D + 1))): A Kx(D + 1) weight matrix (including bias) consisting the gradient of NLL
                                               (i.e. partial derivatives of NLL w.r.t. self.parameters).
         """
-        # X = np.array([[1,2,3,4], [4,5,6,7]])
-        # y = np.array([[0, 1]]).T
-        (N, D) = X.shape
         # ====================================================
+        (N, D) = X.shape
+        K = self.num_features
         X = np.hstack((np.ones((N, 1)), X))
 
-        masterX = None;
+        # print('hi')
+        master_X = None;
         for param in self.parameters:
-            newCol = np.reshape(X @ param, (-1, 1))
-            if masterX is None:
-                masterX = newCol
+            new_col = np.reshape(X @ param, (-1, 1))
+            if master_X is None:
+                master_X = new_col
             else:
-                masterX = np.hstack((masterX, newCol))
-        logedArr = np.log(softmax(masterX))
-        filterY0s = np.take_along_axis(logedArr, y, 1)
-        nll = (-np.sum(filterY0s))/N
-        # ====================================================
+                master_X = np.hstack((master_X, new_col))
+        softmax_arr = softmax(master_X)
+        loged_arr = np.log(softmax_arr)
 
-        # return nll, grad
-        return 0, [[0]]
+        filter_y0s = np.take_along_axis(loged_arr, y, 1)
+        nll = (-np.sum(filter_y0s))
+
+        l2_term = 0
+        C = None
+        if alpha_inverse != 0 and beta_inverse != 0:
+            C = np.diag(np.append([beta_inverse], np.full((1, K), alpha_inverse)))
+            for weight in self.parameters:
+                l2_term += weight @ C @ weight.T
+        nll_new = nll/N + l2_term
+
+        grad = None
+        for index, (param, col) in enumerate(zip(self.parameters, softmax_arr.T)):
+            sigma = col.reshape(-1, 1) * -1
+            ys = np.where(y == index, 1, 0)
+            G = np.add(ys, sigma)
+            row = (X.T * G.T).T
+            row = row.sum(axis=0)
+            row = (-1*row)/N
+            if C is not None:
+                row = np.add(row, (C @ param)*2)
+            if grad is None:
+                grad = row
+            else:
+                grad = np.vstack((grad, row))
+
+        # ====================================================
+        return nll_new, grad
 
     def learn(self,
               train_X,

@@ -27,11 +27,11 @@ def visualize_2d_data(X, y):
     ax = fig.add_subplot(111)
     ax.grid(True, linestyle='-', color='0.75')
 
-    x = X[:, 0]
-    y = X[:, 1]
+    x_v = X[:, 0]
+    y_h = X[:, 1]
     z = y
     # scatter with colormap mapping to z value
-    ax.scatter(x, y, s=20, c=z, marker='o', cmap=cm.jet)
+    ax.scatter(x_v, y_h, s=20, c=z, marker='o', cmap=cm.jet)
 
     plt.show()
 
@@ -40,7 +40,7 @@ def visualize_2d_data(X, y):
 
 if __name__ == "__main__":
     # Support generic_1, generic_2
-    dataset = "generic_1"
+    dataset = "generic_2"
 
     assert dataset in ("generic_1", "generic_2"), f"Invalid dataset: {dataset}"
 

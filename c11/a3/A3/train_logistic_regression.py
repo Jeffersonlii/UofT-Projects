@@ -58,6 +58,7 @@ def train(train_X,
              alpha_inverse=alpha_inverse,
              beta_inverse=beta_inverse,
              eps=np.finfo(np.float).eps)
+
     # Step 3: Evaluate training performance
     train_probs = lr.predict(train_X)
     # ====================================================
@@ -68,7 +69,6 @@ def train(train_X,
     if test_X is not None and test_y is not None:
         test_accuracy = 0
         # ====================================================
-        # TODO: Implement your solution within the box
         # Evaluate test performance
         test_probs = lr.predict(test_X)
         # ====================================================
@@ -82,7 +82,7 @@ if __name__ == "__main__":
     np.random.seed(seed)
 
     # Support iris, generic_1, generic_2
-    dataset = "iris"
+    dataset = "generic_2"
 
     assert dataset in ("iris", "generic_1", "generic_2"), f"Invalid dataset: {dataset}"
 
@@ -95,14 +95,13 @@ if __name__ == "__main__":
     if 'test_X' in data and 'test_y' in data:
         test_X = data['test_X']
         test_y = data['test_y']
-
     # Hyperparameters
     # NOTE: This is definitely not the best way to pass all your hyperparameters.
     #       We can usually use a configuration file to specify these.
     factor = 1
     bias = 5
-    alpha_inverse = 0
-    beta_inverse = 0
+    alpha_inverse = 5
+    beta_inverse = 1
     num_epochs = 1000
     step_size = 1e-3
     check_grad = True
@@ -113,6 +112,8 @@ if __name__ == "__main__":
           test_X=test_X,
           test_y=test_y,
           factor=factor,
+          beta_inverse=beta_inverse,
+          alpha_inverse=alpha_inverse,
           bias=bias,
           num_epochs=num_epochs,
           step_size=step_size,
