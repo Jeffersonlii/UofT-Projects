@@ -82,7 +82,7 @@ if __name__ == "__main__":
     np.random.seed(seed)
 
     # Support iris, generic_1, generic_2
-    dataset = "generic_2"
+    dataset = "iris"
 
     assert dataset in ("iris", "generic_1", "generic_2"), f"Invalid dataset: {dataset}"
 
@@ -100,8 +100,8 @@ if __name__ == "__main__":
     #       We can usually use a configuration file to specify these.
     factor = 1
     bias = 5
-    alpha_inverse = 5
-    beta_inverse = 1
+    alpha_inverse = 0
+    beta_inverse = 0
     num_epochs = 1000
     step_size = 1e-3
     check_grad = True

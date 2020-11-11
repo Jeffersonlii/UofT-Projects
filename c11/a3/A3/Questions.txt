@@ -9,7 +9,7 @@ Visualization:
 1. Do you expect logistic regression to perform well on generic_1? Why?
 I expect logistic regression to perform well on generic_1.
 The classes are almost linearly separable.
-With some regularization to stabilize, the model should be extreme extremely confident
+the model should be extreme extremely confident
 in its predictions, and the sigmoid should look almost like a step function.
 
 2. Do you expect logistic regression to perform well on generic_2? Why?
