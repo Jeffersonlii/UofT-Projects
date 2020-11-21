@@ -1,0 +1,42 @@
+"""
+CSCC11 - Introduction to Machine Learning, Fall 2020, Assignment 4 - Dimensionality Reduction
+B. Chan, S. Wei, D. Fleet
+"""
+
+Answer The Following Questions:
+
+Understanding Eigenvalues:
+1. How do the eigenvalues relate to the diagonal variances used in generating the data?
+There is an inversely proportional relationship
+
+2. How does the additive noise affect the curves?
+lower noise horizontally compresses the curve and shifts it to the left.
+in other words, lower noise relatively increases the difference between each consecutive eigen value.
+
+3. Based on the plots, can you hypothesize the ways to choose the number of subspace dimensions?
+choose the lowest subspace dimension able to capture 95% of the variance.
+in other words, choose the lowest subspace dimension equal or above 0.95 on the fraction (y) axis.
+
+
+PCA on document data:
+1. How big is the covariance matrix used in the PCA algorithm?
+9635 by 9635
+
+2. How long does PCA algorithm take?
+101.62s
+
+3. Do the points from different classes look reasonably separable in this space?
+no, they look very concentrated at one volume of space
+
+
+EM-PCA v.s. PCA:
+1. After running visualize_documents.py, compare the parameters you've estimated using PCA and EM-PCA. Are they identical and if not, how do they differ?
+
+
+2. Which algorithm takes more space?
+
+
+3. How long does EM-PCA algorithm take to run compared to PCA?
+
+
+

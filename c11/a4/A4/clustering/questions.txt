@@ -1,0 +1,85 @@
+"""
+CSCC11 - Introduction to Machine Learning, Fall 2020, Assignment 4 - Clustering
+B. Chan, S. Wei, D. Fleet
+"""
+
+%%%%%%%%%%
+%%  Step 0
+%%%%%%%%%%
+
+1) What is the average sparsity of input vectors? (in [0, 1])
+
+
+2) Find the 10 most common terms, find the 10 least common terms.  (list, separated by commas)
+
+
+3) What is the average frequency of non-zero vector entries in any document?
+
+
+%%%%%%%%%%
+%% Step 1
+%%%%%%%%%%
+
+1) Can you categorize the topic for each cluster? (list, comma separated)
+
+
+2) What factors make clustering difficult?
+
+
+3) Will we get better results with a lucky initial guess for cluster centers?
+   (yes/no and a short explanation of why)
+
+
+%%%%%%%%%%
+%% Step 2
+%%%%%%%%%%
+
+1) What problem from step 1 is solved now?
+
+
+2) What are the topics for clusters?
+
+
+3) Is the result better or worse than step 1? (give a short explanation as well)
+
+
+%%%%%%%%%%
+%% Step 3
+%%%%%%%%%%
+
+1) What are the topics for clusters?
+
+
+2) Why is the clustering better now?
+
+
+3) What is the general lesson you learned in clustering sparse, high-dimensional
+   data?
+
+
+%%%%%%%%%%
+%% Step 5
+%%%%%%%%%%
+
+1) What is the total error difference between K-Means++ and random center initialization?
+
+
+2) What is the mean and variance of total errors after running K-Means++ 5 times?
+
+
+3) Do the training errors appear to be more consistent?
+
+
+4) Do the topics appear to be more meaningful?
+
+
+%%%%%%%%%%
+%%  K-Means vs GMM
+%%%%%%%%%%
+
+1) Under what scenarios do the methods find drastically different clusters? Why?
+
+
+2) What happens to GMM as we increase the dimensionality of input feature? Does K-Means suffer from the same problem?
+   
+

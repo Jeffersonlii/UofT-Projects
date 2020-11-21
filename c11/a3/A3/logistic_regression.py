@@ -78,7 +78,6 @@ class LogisticRegression:
         K = self.num_features
         X = np.hstack((np.ones((N, 1)), X))
 
-        # print('hi')
         master_X = None;
         for param in self.parameters:
             new_col = np.reshape(X @ param, (-1, 1))
