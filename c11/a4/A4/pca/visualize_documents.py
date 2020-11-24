@@ -63,6 +63,6 @@ def main(dataset, algo):
 
 if __name__ == "__main__":
     dataset = pickle.load(open("../data/BBC_data.pkl", "rb"))
-    algo = "empca"
+    algo = "pca"
     assert algo in ("pca", "empca")
     main(dataset, algo)
