@@ -27,16 +27,18 @@ PCA on document data:
 
 3. Do the points from different classes look reasonably separable in this space?
 no, they look very concentrated at one volume of space
-
+#todo
 
 EM-PCA v.s. PCA:
 1. After running visualize_documents.py, compare the parameters you've estimated using PCA and EM-PCA. Are they identical and if not, how do they differ?
-
+They are not identical, in fact, they seem to have flipped signs with respect to each other.
+This is fine, In PCA, we only really care about the Principle component, which is simply a line that is direction agnostic.
+A vector with every component negated will still lie on the same line, and therefore the principle component is effectively the same.
 
 2. Which algorithm takes more space?
-
+PCA takes more space, as EM-PCA doesnt calculate a huge matrix that is stored in memory.
 
 3. How long does EM-PCA algorithm take to run compared to PCA?
-
+EM-PCA takes 7 seconds, much shorter compared to the 101 seconds of PCA
 
 

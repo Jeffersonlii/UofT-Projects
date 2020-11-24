@@ -27,8 +27,7 @@ if __name__ == "__main__":
     s = [4.0, 2.0]
 
     # Noise
-    #noise = 5e-1
-    noise = 0
+    noise = 5e-1
 
     # Number of samples
     num_samples = 15

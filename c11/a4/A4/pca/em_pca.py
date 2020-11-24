@@ -57,7 +57,7 @@ class EMPCA():
         """ This method runs the M-step of the EM algorithm.
         Args:
         - Y (ndarray (shape: (D, N))): A DxN matrix consisting N D-dimensional observation data.
-        - X (ndarray (shape: (K, N))): A SxN matrix consisting N K-dimensional state (subspace) data.
+        - X (ndarray (shape: (K, N))): A KxN matrix consisting N K-dimensional state (subspace) data.
 
         Output:
         - A (ndarray (shape: (D, K))): The estimated state (subspace) basis matrix.
@@ -67,21 +67,9 @@ class EMPCA():
 
         # ====================================================
         # TODO: Implement your solution within the box
-
-        A = Y @ X.T
-        A = gram_schmidt(A)
-        #latent =  A.T @ Y
-
-        # rotate
-        C = np.zeros((K, K))
-        for xi in X.T:
-            xi = xi.reshape((K, 1))
-            C = np.add(C, xi @ xi.T)
-        # print('ay')
-        C = np.true_divide(C, N)
-        ev, R = np.linalg.eig(C)
-        A = A @ R
-        # ====================================================
+        Xt = X.T
+        A = (np.linalg.inv(X @ Xt) @ X @ Y.T).T
+        # =========================================
 
         assert A.shape == (D, K), f"A shape mismatch. Expected: {(D, K)}. Got: {A.shape}"
         return A
