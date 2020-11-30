@@ -31,6 +31,25 @@ def get_data(norm_flag, diffuse):
     transition_matrix_path = "../data/word_transition.pkl"
     cache_path = f"../data/BBC_cache_{norm_flag}_{diffuse}.pkl"
 
+    A = pickle.load(open(data_path, "rb"))['data']
+    # q1
+    #print(np.count_nonzero(pickle.load(open(data_path, "rb"))['data']==0) / 2225) # num of zeros
+
+    # q2
+    #B = np.sum(A, axis=0).reshape(9635, 1).T[0]
+    #for i in np.argsort(B)[:10]: # bottom 10
+    #    print(pickle.load(open(data_path, "rb"))['terms'][i][0][0].strip())
+    #print("b")
+    #for i in np.argsort(B)[-10:]: # top 10
+    #    print(pickle.load(open(data_path, "rb"))['terms'][i][0][0].strip())
+
+    # q3
+    # print(np.sum(A) / np.count_nonzero(A != 0))
+    # s = 0
+    # for x in A:
+    #     den = np.count_nonzero(x != 0)
+    #     s += (sum(x) / den) # average data's value
+    # print(s / 2225) # average every value
     terms = pickle.load(open(data_path, "rb"))['terms']
 
     # Load from cache file if it exists
@@ -127,19 +146,19 @@ if __name__ == "__main__":
     np.random.seed(seed)
 
     # Center Initialization method: kmeans_pp or random
-    center_init = "random"
+    center_init = "kmeans_pp"
 
     # Number of clusters. NOTE: K > 1
     K = 5
 
     # Normalize data
-    norm_flag = False
+    norm_flag = True
 
     # Amount of diffusion
-    diffuse = 0
+    diffuse = 2
 
     # Number of trials
-    num_trials = 1
+    num_trials = 50
 
     # Number of iterations of EM algorithm
     max_iterations = 1000

@@ -59,8 +59,23 @@ class KMeans:
             old_labels = labels
 
             # ====================================================
-            # TODO: Implement your solution within the box
+            for index, center in enumerate(self.centers): # build the distances matrix
+                                                            # K iterations
+                newDistanceCol = np.linalg.norm(train_X - center, axis=1)
+                distances[:, index] = newDistanceCol
 
+            labels = np.argmin(distances, axis=1).reshape((N, 1))# update labels based on distances
+
+            cluster_child_count = np.zeros((1, self.K))
+            self.centers = np.zeros(self.centers.shape) # replace with zeros
+
+
+            for x_index, center_index in enumerate(labels): #update centers value
+                                                            # N iterations
+                self.centers[center_index] += train_X[x_index, :] # increment centers
+                cluster_child_count[:, center_index] += 1 # inc number of children in that center
+
+            self.centers /= cluster_child_count.T # divide by number of children in each center to get avg
             # ====================================================
 
             # Check convergence

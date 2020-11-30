@@ -8,27 +8,31 @@ B. Chan, S. Wei, D. Fleet
 %%%%%%%%%%
 
 1) What is the average sparsity of input vectors? (in [0, 1])
-
+On average, 9506 / 9635 * 100= 98.6% of the input vector is zero
 
 2) Find the 10 most common terms, find the 10 least common terms.  (list, separated by commas)
+most common:
+[get, world, go, govern, first, time, game, on, peopl, year]
 
-
+least common:
+[chagrin, bse, angelina, revolt, Â£117m, culprit, blister, horizont, julio, chill]
 3) What is the average frequency of non-zero vector entries in any document?
-
+the average frequency is 1.4524
 
 %%%%%%%%%%
 %% Step 1
 %%%%%%%%%%
 
 1) Can you categorize the topic for each cluster? (list, comma separated)
-
+#todo
 
 2) What factors make clustering difficult?
-
+#todo
 
 3) Will we get better results with a lucky initial guess for cluster centers?
    (yes/no and a short explanation of why)
-
+    Yes, the loss function is not strictly convex, its possible for there to be multiple local minimas,
+    and a lucky guess might bring us to a lower local minima then an unlucky guess.
 
 %%%%%%%%%%
 %% Step 2
