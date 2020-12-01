@@ -148,7 +148,7 @@ if __name__ == "__main__":
     np.random.seed(seed)
 
     # Center Initialization method: kmeans_pp or random
-    center_init = "kmeans_pp"
+    center_init = "random"
 
     # Number of clusters. NOTE: K > 1
     K = 5
