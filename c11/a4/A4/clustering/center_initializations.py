@@ -18,33 +18,28 @@ def kmeans_pp(K, train_X):
     centers = np.empty(shape=(K, train_X.shape[1]))
 
     # ====================================================
-    # TODO: needs testing
-    print("Start")
+    print(train_X)
     N = train_X.shape[0]
-    centers[0, :] = train_X[np.random.randint(0, N), :] #init N
+    centers[0, :] = train_X[np.random.randint(0, N), :] # step 1
     for center_i in range(1, K):
 
-        distances = np.empty(shape=(N, center_i + 1))
+        distances = np.empty(shape=(N, center_i))
 
-        # bug in here
-        for index, center in enumerate(centers[:min(center_i + 1, N), :]): #build distance matrix
-            print(center.shape)
+        for index, center in enumerate(centers[:center_i, :]): #build distance matrix
             newDistanceCol = np.linalg.norm(train_X - center, axis=1)
             distances[:, index] = newDistanceCol
 
-
-        min_distances = np.square(np.min(distances, axis=1)) # reduce to min distances and square all
+        min_distances = np.square(np.min(distances, axis=1)) # matrix of di^2
         sum_d = min_distances.sum()
         z = np.random.uniform(low=0.0, high=1.0)
 
         prob_sum = 0
         for yi, di in enumerate(min_distances):
-            if prob_sum >= z:
-                centers[center_i, :] = train_X[yi - 1, :]
-                break
             prob_sum += di / sum_d
-    print("End")
 
+            if prob_sum >= z:
+                centers[center_i, :] = train_X[yi, :]
+                break
     # ====================================================
 
     return centers

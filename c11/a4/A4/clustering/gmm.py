@@ -53,6 +53,19 @@ class GMM:
 
         # ====================================================
         # TODO: Implement your solution within the box
+        def multivariate_normal_pdf(y, mean, cov):
+            inv = np.reciprocal(np.sqrt(np.power(6.28318530718, y.shape[0]) * np.linalg.det(cov)))
+            ex = np.e ** (-1/2 * (y - mean).T @ np.linalg.inv(cov) @ (y - mean))
+
+            return inv * ex
+
+        for index, row in enumerate(train_X): # loop over rows
+            denom = 0
+            for k in range(self.K):
+                prob = multivariate_normal_pdf(row, self.centers[k, :], self.covariances[k, :, :]) * self.mixture_proportions[k]
+                probability_matrix[index, k] = prob
+                denom += prob
+            probability_matrix[index, :] /= denom
 
         # ====================================================
 
@@ -80,8 +93,24 @@ class GMM:
         covariances = np.empty(shape=(self.K, self.D, self.D))
         mixture_proportions = np.empty(shape=(self.K, 1))
         # ====================================================
-        # TODO: Implement your solution within the box
-        # 
+        mixture_proportions = np.sum(probability_matrix, axis=0) / N
+        mixture_proportions = mixture_proportions.reshape(self.K, 1)
+
+        for i in range(self.K):
+            posty = np.multiply(train_X, probability_matrix[:, i][:, np.newaxis])
+            num_sum = np.sum(posty, axis=0)
+            denom = np.sum(probability_matrix[:, i], axis=0)
+            centers[i, :] = num_sum / denom
+
+        for i in range(self.K):
+            diff = train_X - centers[i, :]
+            diff_m = diff[..., None] * diff[:, None, :]
+            posty = np.multiply(diff_m, probability_matrix[:, i][:, np.newaxis, np.newaxis])
+            num_sum = np.sum(posty, axis=0)
+            denom = np.sum(probability_matrix[:, i], axis=0)
+            covariances[i, :, :] = num_sum / denom
+
+
         # ====================================================
 
         assert centers.shape == (self.K, self.D), f"centers shape mismatch. Expected: {(self.K, self.D)}. Got: {centers.shape}"

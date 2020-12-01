@@ -24,66 +24,95 @@ the average frequency is 1.4524
 %%%%%%%%%%
 
 1) Can you categorize the topic for each cluster? (list, comma separated)
-#todo
+[british politics, film award, African match, British politician film, mobile game]
 
 2) What factors make clustering difficult?
-#todo
+the initial centers are a factor in making clustering difficult,
+running multiple trial yield very different clusters, this should not happen if the
+centers are initialized optimally every time.
+Another factor is, since vectors are not normalized, a outlier vector can have a
+big influence on the overall classification.
+Furthermore, the sparsity of the data combined with the high dimensionality
+ makes K means an ineffective algorithm for clustering the data
 
 3) Will we get better results with a lucky initial guess for cluster centers?
    (yes/no and a short explanation of why)
-    Yes, the loss function is not strictly convex, its possible for there to be multiple local minimas,
-    and a lucky guess might bring us to a lower local minima then an unlucky guess.
+Yes, the loss function is not strictly convex, its possible for there to be multiple local minimas,
+and a lucky guess might bring us to a lower local minima then an unlucky guess.
+
+Furthermore, since we are assigning the centers randomly, we could have clusters very close to each other,
+which would give very poor performance.
 
 %%%%%%%%%%
 %% Step 2
 %%%%%%%%%%
 
 1) What problem from step 1 is solved now?
-
+It disallows a outlier vector to carry a disproportional weight by reducing every vector to a probability
+instead of a concrete finite difference.
 
 2) What are the topics for clusters?
-
+[robbie weir joins team Sunderland football club,
+film on the Sunderland football club,
+a final match and results,
+Sunderland football club final match,
+robbie weir joins team Sunderland football club,
+]
 
 3) Is the result better or worse than step 1? (give a short explanation as well)
-
+Seems like the results are worse than step 1, mostly because there are 2 clusters
+that seemingly capture the same group.
+Although this might just be because the K value is too high.
+But the actual clusters seem to be more meaningful.
 
 %%%%%%%%%%
 %% Step 3
 %%%%%%%%%%
 
 1) What are the topics for clusters?
-
+[UK elections, best film award, film/play on a sporting match,
+ sporting match final between England and Ireland, companies business and market]
 
 2) Why is the clustering better now?
-
+By preprocessing the vectors, we condense a very sparse dataset.
+Kmeans will perform much better on a dense dataset compared to a sparse one.
 
 3) What is the general lesson you learned in clustering sparse, high-dimensional
    data?
-
+Kmeans does not work well withsparse, high-dimensional data.
+We should try to reduce dimensiality (PCA) and/or make the data more dense.
 
 %%%%%%%%%%
 %% Step 5
 %%%%%%%%%%
 
 1) What is the total error difference between K-Means++ and random center initialization?
-
+K-Means++ provides a lower total error at 3.225886542418204 compared to random init at 3.4682554049254213
 
 2) What is the mean and variance of total errors after running K-Means++ 5 times?
-
+for seed = 1,
+ERRORS: [3.225890565614738, 3.225890520190174, 3.2258705404811963, 3.225890565614738, 3.225890520190174]
+Average: 3.225886542418204
+Variance: 6.40159096787135e-11
 
 3) Do the training errors appear to be more consistent?
-
+Yes, the variance of k-means++ is far lower than k-means at 6.40159096787135e-11
+compared to 0.02035659914379395
 
 4) Do the topics appear to be more meaningful?
-
+the topics are good but not more meaningful than random init.
 
 %%%%%%%%%%
 %%  K-Means vs GMM
 %%%%%%%%%%
 
 1) Under what scenarios do the methods find drastically different clusters? Why?
-
+The methods are drastically different when the data can not be nicely clustered by circular clusters.
+This is because Kmeans will still try to cluster using circular clusters, as that is its limitation.
+On the contrary, GMM can cluster the data with non circular clusters.
 
 2) What happens to GMM as we increase the dimensionality of input feature? Does K-Means suffer from the same problem?
-   
+Since in the pdf of of mumultivariate normal pdf, we must calculate 2  * pi to the power of the number of features,
+If the number of features / dimensionality of input feature is too high, python will overflow numerically.
+K means does not suffer this problem, as a higher dimension does not lead the algorithm to numerically overflow.
 

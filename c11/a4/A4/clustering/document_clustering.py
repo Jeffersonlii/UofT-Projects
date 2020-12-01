@@ -14,6 +14,7 @@ import os
 
 from center_initializations import (random_init, kmeans_pp)
 from kmeans import KMeans
+from gmm import GMM
 
 def get_data(norm_flag, diffuse):
     """ This function preprocesses the data given the flags.
@@ -107,6 +108,7 @@ def main(seed, num_trials, center_init, K, norm_flag, diffuse, max_iterations=10
         init_centers = center_init_mapping[center_init](K=K, train_X=data)
         print(f"Trial: {trial_i} - Intial Centers: {init_centers}")
         model = KMeans(init_centers=init_centers)
+        #model = GMM(init_centers=init_centers)
         labels = model.train(train_X=data, max_iterations=max_iterations)
 
         total_error = 0
@@ -142,7 +144,7 @@ def main(seed, num_trials, center_init, K, norm_flag, diffuse, max_iterations=10
 
 if __name__ == "__main__":
     # Set random seed
-    seed = 2
+    seed = 1
     np.random.seed(seed)
 
     # Center Initialization method: kmeans_pp or random
@@ -158,7 +160,7 @@ if __name__ == "__main__":
     diffuse = 2
 
     # Number of trials
-    num_trials = 50
+    num_trials = 5
 
     # Number of iterations of EM algorithm
     max_iterations = 1000

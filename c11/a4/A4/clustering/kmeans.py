@@ -61,7 +61,7 @@ class KMeans:
             # ====================================================
             for index, center in enumerate(self.centers): # build the distances matrix
                                                             # K iterations
-                newDistanceCol = np.linalg.norm(train_X - center, axis=1)
+                newDistanceCol = np.square(np.linalg.norm(train_X - center, axis=1))
                 distances[:, index] = newDistanceCol
 
             labels = np.argmin(distances, axis=1).reshape((N, 1))# update labels based on distances

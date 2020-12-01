@@ -99,7 +99,7 @@ if __name__ == "__main__":
     tests = [f"test_{i}.pkl" for i in range(1, 6)]
 
     # Test methods: kmeans, gmm, all
-    test_method = "kmeans"
+    test_method = "all"
 
     # Whether or not to visualize clusters
     visualize = True
