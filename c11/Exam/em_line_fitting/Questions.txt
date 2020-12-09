@@ -1,0 +1,27 @@
+"""
+CSCC11 - Introduction to Machine Learning, Fall 2020, Exam
+B. Chan, D. Fleet
+"""
+
+EM Line Fitting
+
+Answer The Following Questions:
+1. In test case 0, the two lines fit well. The ownership probabilities are either 0 or 1 near the right
+   and left sides of the plot, but near 0.5 closer to the middle. Explain why this occurs and why it's useful.
+
+
+2. In test case 1, the lines do not fit the data well.
+   Explain what might be the source of the problem in this case.
+
+
+3. Test cases 2 and 3 fit two and three lines, but in both cases not all lines appear to fit the 
+   data well. Select one of these two test cases and explain what might be the source of the problem, 
+   making reference to the model variance and the ownership probabilities.
+
+
+Bonus: Set test_case = 4 and run train_em_line_fitting.py. This sets num_lines = 5 and sigma = 3.0. 
+       What happens to the fit? With mixture models, it commonly happens that one sets the number of 
+       model components too high for a given dataset. Explain how you might adjust the algorithm to 
+       automatically find an appropriate number of lines?
+
+

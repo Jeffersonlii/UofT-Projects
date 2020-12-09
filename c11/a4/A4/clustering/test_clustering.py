@@ -43,7 +43,7 @@ def run_test(data_path, test_method, visualize=False):
         gmm_labels = test_data["gmm_labels"].flatten()
         gmm_enabled = True
         num_plots += 1
-
+    print('done')
     if visualize:
         K = test_data["init_centers"].shape[0]
         fig = plt.figure(figsize=(5, 10))
@@ -102,6 +102,6 @@ if __name__ == "__main__":
     test_method = "all"
 
     # Whether or not to visualize clusters
-    visualize = True
+    visualize = False
 
     test_all(base_path, tests, test_method, visualize)
