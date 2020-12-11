@@ -26,19 +26,19 @@ def check_final_results(test_case, em):
     print("Details:")
     if not correct_ownerships:
         print("Expected Ownership Probabilities:")
-        print(data["ownership_probs"])
+        print(expected_results["ownership_probs"])
         print("Got:")
         print(em.ownership_probs)
 
     if not correct_mixing_probs:
         print("Expected Mixing Probabilities:")
-        print(data["mixing_probs"])
+        print(expected_results["mixing_probs"])
         print("Got:")
         print(em.mixing_probs)
 
     if not correct_model_params:
         print("Expected Model Parameters:")
-        print(data["model_parameters"])
+        print(expected_results["model_parameters"])
         print("Got:")
         print(em.model_parameters)
 
@@ -47,7 +47,7 @@ def check_final_results(test_case, em):
 
 
 if __name__ == "__main__":
-    visualize = False
+    visualize = True
 
     # ======================================================================
     # This is for debugging purpose.
@@ -58,7 +58,7 @@ if __name__ == "__main__":
     # test_case = 2 -> standard deviation = 0.25, num lines = 2
     # test_case = 3 -> standard deviation = 0.25, num lines = 3
     # test_case = 4 -> standard deviation = 3.0, num_lines = 5
-    test_case = 0
+    test_case = 4
     # ======================================================================
 
     # ======================================================================

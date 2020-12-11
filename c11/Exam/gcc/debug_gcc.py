@@ -27,10 +27,11 @@ def debug_d_dim_k_class(d, k):
     correct_covariances = np.allclose(model.covariances, data["covariances"])
     correct_priors = np.allclose(model.priors, data["priors"])
 
-    model.means = data["means"]
-    model.covariances = data["covariances"]
-    model.priors = data["priors"]
-    probs = model.predict(data["X"])
+    model_correct_params = GCC(d, k)
+    model_correct_params.means = data["means"]
+    model_correct_params.covariances = data["covariances"]
+    model_correct_params.priors = data["priors"]
+    probs = model_correct_params.predict(data["X"])
     correct_predictions = np.allclose(probs, data["predictions"])
 
     print(f"Correct Means: {correct_means}")

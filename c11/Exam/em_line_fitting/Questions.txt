@@ -9,19 +9,48 @@ Answer The Following Questions:
 1. In test case 0, the two lines fit well. The ownership probabilities are either 0 or 1 near the right
    and left sides of the plot, but near 0.5 closer to the middle. Explain why this occurs and why it's useful.
 
+    At the far right and left sides of the plot, the distance between the lines are much bigger, this extremity
+    leaves no room for speculation in which component the data belongs to.
+    In the middle of the graph, the 2 component's distance gets smaller and smaller, eventually reaching 0 at the intersect.
+    This results in the data becoming more and more equidistant with both components. On some data, the distance between
+    component 1 and component 2 are exactly the same, there is no way to tell which component the data belong to.
+    Therefore the ownership probability becomes 0.5.
+
+    This is useful as usually we will have some overlapping data from different clusters,
+    our model is able to capture that.
 
 2. In test case 1, the lines do not fit the data well.
    Explain what might be the source of the problem in this case.
 
+    The data doesnt fit well, as the level of variance is too high. Having a high variance makes our model reject high
+    ownership probabilities, this implies our model will have ownership probabilities closer to 50%.
+
+    this results in the components trying to be exactly equidistant to every data point.
+    This is why in this case, our 2 components are almost horizontal in the middle of the graph,
+    and each data point is almost equidistant to either components.
 
 3. Test cases 2 and 3 fit two and three lines, but in both cases not all lines appear to fit the 
    data well. Select one of these two test cases and explain what might be the source of the problem, 
    making reference to the model variance and the ownership probabilities.
 
+    test case 2
+
+    Since our variance is so low, our model prefers to be 100% certain about the ownership. Unfortunately, this
+    doesnt allow a region of intersection, as our ownership probabilities would fall to ~50%.
+    So our model tries to fit as best as possible without intersecting components, this results in the fit of
+    2 parallel, non intersecting components.
 
 Bonus: Set test_case = 4 and run train_em_line_fitting.py. This sets num_lines = 5 and sigma = 3.0. 
        What happens to the fit? With mixture models, it commonly happens that one sets the number of 
        model components too high for a given dataset. Explain how you might adjust the algorithm to 
        automatically find an appropriate number of lines?
+
+       Multiple lines try to fit the same line.
+        Because multiple lines try to fit the same line, for each point,
+        we never get a good ownership probability
+        for any single component.
+        We can try to count how many points have a ownerships probability of over 80%
+        for any component. If this count is too low, we can lower the amount of components.
+
 
 

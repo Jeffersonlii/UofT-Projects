@@ -62,7 +62,14 @@ class GMM:
         for index, row in enumerate(train_X): # loop over rows
             denom = 0
             for k in range(self.K):
+                print((N, D, self.K))
+                print("row", row.shape)
+                print("covariances", self.covariances[k, :, :].shape)
+                print("centers", self.centers[k, :].shape)
+
                 prob = multivariate_normal_pdf(row, self.centers[k, :], self.covariances[k, :, :]) * self.mixture_proportions[k]
+
+
                 probability_matrix[index, k] = prob
                 denom += prob
             probability_matrix[index, :] /= denom

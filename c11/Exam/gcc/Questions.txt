@@ -30,22 +30,23 @@ Answer The Following Questions:
    How many parameters would you need to learn for each Gaussian in this case?
 
    The main change would be how we calculate the posterior, instead of calculating 1 d dimensional multivariate
-   Gaussian distribution, we calculate d 1 dimensional univariate
-   Gaussian distributions. Our naive bayes posterior is much simpler, needing to only learn
-   1 + D + D parameters
+   Gaussian distribution, we calculate d 1 dimensional univariate Gaussian distributions.
+   Our naive bayes posterior is much simpler, needing to only learn 1 + D + D parameters
 
 6. Suppose certain elements of the input feature vectors are highly correlated.
    Why is this problematic for Naive Bayes?
     Naive Bayes can not model correlation, as its training speed comes from ignoring the covariance.
-    I expect its prediction performance to suffer.
+    Do to this, Naive Bayes will not be able to model some relations, and I expect
+     prediction performance to suffer due to the fact.
 
 7. How could you transform the data to mitigate this problem with Naive Bayes?
+
     We can look at the correlation of each pair of features, and remove 1/2 features
     for pairs that are very correlated.
 
-    for example if the dataset is for driving accidents,
-    we have deaths, drinking, and chewing gum.
-    We can see deaths and drinking are very correlated, we can remove one of the features from the data.
+    for example, if our data set contains features 'has lung cancer' and 'does smoke',
+    we can see these 2 features are very correlated,
+    we can remove one of them to remove the correlation entirely.
 
 
 

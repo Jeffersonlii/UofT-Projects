@@ -71,14 +71,13 @@ class GCC:
             self.means[label, :] = np.mean(x_with_label, axis=0)
 
             # set prior
-            self.priors[label] = x_with_label.shape[0] / self.K
+            self.priors[label] = x_with_label.shape[0] / N
 
             # set cov
             diff = x_with_label - np.tile(self.means[label, :], (x_with_label.shape[0], 1))  # [x] - [mu]
             diff_m_t = diff[..., None] * diff[:, None, :]  # ([x] - [mu])([x] - [mu])T
             squashed = np.sum(diff_m_t, axis=0)  # \Sigma ([x] - [mu])([x] - [mu])T
-
-            self.covariances[label, :, :] = squashed / x_with_label.shape[0]  # ([x] - [mu])([x] - [mu])T / m
+            self.covariances[label, :, :] = squashed / (x_with_label.shape[0] - 1)   # ([x] - [mu])([x] - [mu])T / m
         # ====================================================
 
         assert self.means.shape == (
@@ -109,16 +108,16 @@ class GCC:
             inv = np.reciprocal(np.sqrt(np.power(6.28318530718, x.shape[0]) * np.linalg.det(cov)))
             ex = np.e ** (-1 / 2 * (x - mean).T @ np.linalg.inv(cov) @ (x - mean))
             return inv * ex
+
         for row in range(N):  # loop over each datapoint
-            posts = np.empty((self.K, 1))
+            posts = np.zeros((self.K, 1))
             for i in range(self.K):
                 posts[i, :] = multivariate_normal_pdf(X[row, :],
                                                       self.means[i, :],
                                                       self.covariances[i, :, :]) * self.priors[i, :]
-
             for i in range(self.K):
-                denom = np.sum(posts, axis=0) - posts[i, :]
-                logits[row, i] = 0 if denom == 0 or posts[i, :] == 0 else np.log(posts[i, :] / denom)
+                logits[row, i] = posts[i, :]
+
         # ====================================================
 
         probs = softmax(logits)

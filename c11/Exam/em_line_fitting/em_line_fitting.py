@@ -100,7 +100,24 @@ class EMLineFitting():
         """
 
         # ====================================================
-        # TODO: Implement your solution within the box
+
+        def gaussian(g_y, g_x, weights, sigma2):
+            inv = np.reciprocal(np.sqrt(6.28318530718 * sigma2))
+            ex = np.e ** ((-1 / (2 * sigma2)) * (g_y - weights @ g_x) ** 2)
+            return inv * ex
+
+        y_pred = np.zeros((self.N, self.K))
+        ownership_probs = np.empty((self.N, self.K))
+        for row in range(self.N):
+            for col in range(self.K):
+                y_pred[row, col] = self.model_parameters[:, col] @ x[row, :]
+                post = self.mixing_probs[col, :] * gaussian(
+                    y[row, :],
+                    x[row, :],
+                    self.model_parameters[:, col], self.variances[col, :])
+                ownership_probs[row, col] = post
+            denom = np.sum(ownership_probs[row, :])
+            ownership_probs[row, :] /= 1 if denom == 0 else denom
 
         # ====================================================
 
@@ -117,13 +134,25 @@ class EMLineFitting():
         - y (ndarray (shape: (N, 1))): A N-column vector storing of the y values for observed data
 
         Output:
-        - parameters (shape: (K, 2)): A Kx2 matrix storing the parameters of the K mixture components (the linear models)
+        - parameters (shape: (2, K)): A 2xK matrix storing the parameters of the K mixture components (the linear models)
         - mixing_probs (shape: (K, 1)): A K-column vector storing the mixing probabilities.
         """
 
         # ====================================================
-        # TODO: Implement your solution within the box
+        # print(self.ownership_probs, self.ownership_probs.sum(0))
+        mixing_probs = np.sum(self.ownership_probs, axis=0) / self.N
+        mixing_probs = mixing_probs.reshape((-1, 1))
 
+        parameters = np.empty((2, self.K))
+        X = x
+        Y = y
+
+        for i in range(self.K):
+            Q = self.ownership_probs[:, i].reshape((-1, 1))
+            Q_prime = np.tile(Q.T, (2, Q.shape[1])).T
+            left = np.linalg.inv(np.multiply(Q_prime.T, X.T) @ X)
+            right = X.T @ (np.multiply(Q, Y))
+            parameters[:, i] = (left @ right).reshape(2,)
         # ====================================================
 
         assert parameters.shape == (2, self.K), f"parameters shape mismatch. Expected: {(2, self.K)}. Got: {parameters.shape}"
