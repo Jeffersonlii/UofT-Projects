@@ -31,6 +31,10 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#define LEFT 1
+#define RIGHT -1
+
+
 
 /**
  * This defines the struct(ure) used to define the nodes
@@ -49,6 +53,13 @@ typedef struct avl_node {
 
   // TODO: Add the other fields you need here to complete the assignment!
   //      (Hint: You need at least 1 more field to keep balance)
+  int height;
+
+  struct avl_node *closest_a;
+  struct avl_node *closest_b;
+
+  struct avl_node *smallest_node;
+  struct avl_node *biggest_node;
 
 } AVLNode;;
 
@@ -60,8 +71,7 @@ typedef struct avl_node {
  * TODO: Initialize the new fields you have added
  */
 AVLNode *newNode(int value) {
-
-  AVLNode *node = calloc(sizeof(AVLNode), 1);
+  AVLNode *node = calloc(sizeof(AVLNode),1);
   if (node == NULL) {  // In case there's an error
     return NULL;
   }
@@ -71,9 +81,99 @@ AVLNode *newNode(int value) {
   node->right = NULL;
 
   // Initialize values of the new fields here...
+  node->height = 1;
 
+  node->closest_a = NULL;
+  node->closest_b = NULL;
 
+  node->smallest_node = node;
+  node->biggest_node = node;
   return node;
+}
+
+int max(x,y){
+  return x > y ? x : y;
+}
+int min(x,y){
+    return x < y ? x : y;
+}
+int abs(x){
+    return x < 0 ? -1*x : x;
+}
+AVLNode *setClosests(AVLNode *root){ 
+  if(root->left == NULL && root->right == NULL){
+    return root;//if no children, nothing to change
+  }
+
+  int left_min = 1000001;
+  int right_min = 1000001;
+  int left_gap = 1000001;
+  int right_gap = 1000001;
+
+  if(root->left != NULL){ 
+    root->smallest_node = root->left->smallest_node;// set smallest to left edge 
+
+    left_gap = root->value - root->left->biggest_node->value;//left gap is (self - max of left)
+    if(root->left->closest_a != NULL){
+
+      left_min = root->left->closest_b->value - root->left->closest_a->value; //get left min if exists
+    }
+  }
+  if (root->right != NULL){
+    root->biggest_node = root->right->biggest_node;//set biggest to right edge 
+
+    right_gap = root->right->smallest_node->value - root->value;//right gap is (min of right - self)
+    if(root->right->closest_a != NULL){
+        right_min = root->right->closest_b->value - root->right->closest_a->value;//get right min if exists
+    }
+  }
+
+  int abs_min = min(left_min, min(right_min, min(left_gap, right_gap)));
+  if(left_min == abs_min){
+    root->closest_a = root->left->closest_a;
+    root->closest_b = root->left->closest_b;
+  }else if (right_min == abs_min){
+    root->closest_a = root->right->closest_a;
+    root->closest_b = root->right->closest_b;
+  }else if (left_gap == abs_min){
+    root->closest_a = root->left->biggest_node;
+    root->closest_b = root;
+  }else{ //right_gap == abs_min
+    root->closest_a = root;
+    root->closest_b = root->right->smallest_node;
+  }
+
+  return root;
+}
+AVLNode *rotate(AVLNode *root,int direction){ 
+  AVLNode *new_root;
+  AVLNode *straggler;
+  if(direction == LEFT){
+    straggler = root->right->left;
+
+    new_root = root->right;
+    new_root->left = root;
+    root->right = straggler;
+  }else{//direction == RIGHT
+    straggler = root->left->right;
+
+    new_root = root->left;
+    new_root->right = root;
+    root->left = straggler;
+  }
+  int left_height = root->left == NULL ? 0 : root->left->height;
+  int right_height = root->right == NULL ? 0 : root->right->height;
+  root->height = max(left_height,right_height) + 1; //recalculate height
+
+  left_height = new_root->left == NULL ? 0 : new_root->left->height;
+  right_height = new_root->right == NULL ? 0 : new_root->right->height;
+  new_root->height = max(left_height,right_height) + 1; //recalculate height
+
+  setClosests(root);
+  setClosests(new_root);
+
+  return new_root;
+
 }
 
 /**
@@ -103,7 +203,43 @@ AVLNode *newNode(int value) {
  */
 AVLNode *insert(AVLNode *root, int value) {
 
-  return root;  // Placeholder statement... replace this.
+  if(root == NULL) {//base case
+    return newNode(value);
+  } 
+
+  //1 => go left, -1 => go right, 0 => already exists
+  int direction = root->value > value ? LEFT : root->value < value ? RIGHT : 0;
+
+  if(direction == LEFT){//go left
+    root->left = insert(root->left, value);
+  }
+  else if(direction == RIGHT){//go right
+    root->right = insert(root->right, value);
+  }
+  else{
+    return root; //do nothing if node exists
+  }
+
+  int left_height = root->left == NULL ? 0 : root->left->height;
+  int right_height = root->right == NULL ? 0 : root->right->height;
+  root->height = max(left_height,right_height) + 1; //recalculate height
+
+  root = setClosests(root);
+
+  int balance_factor =  left_height - right_height;
+  if(abs(balance_factor) > 1){ //need to rotate
+    int heavy_side = balance_factor > 1 ? LEFT : RIGHT;
+
+    if(heavy_side == LEFT && root->left->value < value) { // left to right bend, double rotate
+      root->left = rotate(root->left, LEFT);
+    }
+    else if (heavy_side == RIGHT && root->right->value > value){ // right to left bend, double rotate
+      root->right = rotate(root->right, RIGHT);
+    }
+    return rotate(root, direction == LEFT ? RIGHT : LEFT ); // rotate opposite to heavy side
+  }
+ 
+  return root;
 }
 
 /**
@@ -130,10 +266,9 @@ AVLNode *insert(AVLNode *root, int value) {
  *       you are smart about it you can do it in constant time.
  */
 void closestPair(AVLNode *root, int *a, int *b) {
-  
 
-  (*a) = 0;  // Placeholder values for the closest pair,
-  (*b) = 0;  // replace these with the actual ones.
+  (*a) = root->closest_a->value;
+  (*b) = root->closest_b->value; 
   return;
 }
 
