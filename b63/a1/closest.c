@@ -102,7 +102,11 @@ int abs(x){
 }
 AVLNode *setClosests(AVLNode *root){ 
   if(root->left == NULL && root->right == NULL){
-    return root;//if no children, nothing to change
+    root->closest_a = NULL;
+    root->closest_b = NULL;
+    root->smallest_node = root;
+    root->biggest_node = root;
+    return root;//if no children, reset to leaf node 
   }
 
   int left_min = 1000001;
@@ -154,6 +158,7 @@ AVLNode *rotate(AVLNode *root,int direction){
     new_root = root->right;
     new_root->left = root;
     root->right = straggler;
+    
   }else{//direction == RIGHT
     straggler = root->left->right;
 
@@ -169,8 +174,8 @@ AVLNode *rotate(AVLNode *root,int direction){
   right_height = new_root->right == NULL ? 0 : new_root->right->height;
   new_root->height = max(left_height,right_height) + 1; //recalculate height
 
-  setClosests(root);
-  setClosests(new_root);
+  root = setClosests(root);
+  new_root = setClosests(new_root);
 
   return new_root;
 
