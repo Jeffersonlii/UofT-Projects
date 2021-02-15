@@ -1,0 +1,385 @@
+---
+title: "STAC67 Assignment 1"
+author: 'Jefferson Li, Arib Shaikh'
+date: 'January 20 2021'
+header-includes:
+   - \usepackage{amsthm}
+output: pdf_document
+---
+Set Seed
+```{r seed}
+set.seed(1005057368) 
+```
+
+### Q. 1  
+
+#### (a)
+First we generate our random numbers
+```{r q1-generation }
+mu = 100
+sigma = 20 
+
+n3 = rnorm(100, mean = mu, sd = sigma)
+n4 = rnorm(1000, mean = mu, sd = sigma)
+n5 = rnorm(10000, mean = mu, sd = sigma)
+n6 = rnorm(100000, mean = mu, sd = sigma)
+```
+```{r, echo=FALSE}
+par(mfrow = c(2,2)) #set graphic parameter
+
+hist(n3, # [] is like a query on the row
+     breaks = 50,
+     main = "n = 100",
+     col = "red",
+     xlab=NULL,
+      freq = FALSE)
+curve(dnorm(x, mean = mean(n3), sd = sd(n3)),
+      col = "thistle4",  # Color of curve
+      lwd = 2,           # Line width of 2 pixels
+      add = TRUE)        # Superimpose on previous graph
+
+hist(n4, # [] is like a query on the row
+     breaks = 50,
+     main = "n = 1000",
+     col = "purple",
+     xlab=NULL,
+      freq = FALSE)
+curve(dnorm(x, mean =  mean(n4), sd = sd(n4)),
+      col = "thistle4",  # Color of curve
+      lwd = 2,           # Line width of 2 pixels
+      add = TRUE)        # Superimpose on previous graph
+
+hist(n5, # [] is like a query on the row
+     breaks = 50,
+     main = "n = 10000",
+     col = "blue",
+     xlab=NULL,
+      freq = FALSE)
+curve(dnorm(x, mean = mean(n5), sd = sd(n5)),
+      col = "thistle4",  # Color of curve
+      lwd = 2,           # Line width of 2 pixels
+      add = TRUE)        # Superimpose on previous graph
+
+hist(n6, # [] is like a query on the row
+     breaks = 50,
+     main = "n = 100000",
+     col = "orange",
+     xlab=NULL,
+      freq = FALSE)
+curve(dnorm(x, mean = mean(n6), sd = sd(n6)),
+      col = "thistle4",  # Color of curve
+      lwd = 2,           # Line width of 2 pixels
+      add = TRUE)        # Superimpose on previous graph
+
+par(mfrow=c(1, 1)) # revert graphic parameter
+```
+
+The distribution of the generated data approach the normal distribution as n increases.
+In otherwords, the approximate accuracy increases as n increases.
+
+#### (b)
+Creating table to compare sample with theoretical
+```{r}
+
+summaryTable = matrix(c(
+mu, sigma, qnorm(0.025,mu,sigma),qnorm(0.25,mu,sigma),
+qnorm(0.5,mu,sigma),qnorm(0.75,mu,sigma),qnorm(0.975,mu,sigma),# theoretical
+  
+mean(n3), sd(n3),quantile(n3, probs = c(0.025)), 
+quantile(n3, probs = c(0.25)),quantile(n3, probs = c(0.50)),
+quantile(n3, probs = c(0.75)),quantile(n3, probs = c(0.975)), # n = 100
+  
+mean(n4), sd(n4), quantile(n4, probs = c(0.025)), quantile(n4, probs = c(0.25)),
+quantile(n4, probs = c(0.50)),
+quantile(n4, probs = c(0.75)),quantile(n4, probs = c(0.975)), # n = 1000
+  
+mean(n5), sd(n5), quantile(n5, probs = c(0.025)), quantile(n5, probs = c(0.25)),
+quantile(n5, probs = c(0.50)),
+quantile(n5, probs = c(0.75)),quantile(n5, probs = c(0.975)), # n = 10000
+  
+mean(n6), sd(n6), quantile(n6, probs = c(0.025)), quantile(n6, probs = c(0.25)),
+quantile(n6, probs = c(0.50)),
+quantile(n6, probs = c(0.75)),quantile(n6, probs = c(0.975)) # n = 100000
+),ncol=7,byrow=TRUE)
+colnames(summaryTable) = c("mean","standard deviation",
+                          "2.5th percentile", 
+                          "25th percentile","50th percentile","75th percentile",
+                          "97.5th percentile")
+rownames(summaryTable) = c("theoretical", "n = 100", "n = 1000", "n = 10000", "n = 100000")
+
+summaryTable
+```
+
+as we can see, every single column gets closer and closer to the theoretical as n increases. This means as we sample more data, the distribution becomes closer and closer to the theoretical normal distribution.
+
+### Q. 2  
+#### (a)
+
+##### (i)
+\begin{proof}
+    Show that $S_{XX} = \Sigma X^2_i - n \bar{X}^2$
+    \begin{align}
+      S_{XX} &= \Sigma(X_i-\bar{X})^2\\
+             &= \Sigma(X_i^2- 2X_i\bar{X}+\bar{X}^2)\\
+             &= \Sigma X_i^2- \Sigma 2X_i\bar{X}+\Sigma \bar{X}^2\\
+             &= \Sigma X_i^2- 2\bar{X}\Sigma X_i+n\bar{X}^2\\
+             &= \Sigma X_i^2- 2\bar{X}n\bar{X}+n\bar{X}^2\\
+             &= \Sigma X_i^2- n\bar{X}^2
+    \end{align}
+\end{proof}
+
+##### (ii)
+\begin{proof}
+    Show that $S_{XY} = \Sigma X_iY_i - n \bar{X}\bar{Y}$
+    \begin{align}
+      S_{XY} &= \Sigma(X_i-\bar{X})(Y_i-\bar{Y})\\
+             &= \Sigma(X_iY_i- X_i\bar{Y} - \bar{X}Y_i + \bar{X}\bar{Y})\\
+             &= \Sigma X_iY_i- \Sigma X_i\bar{Y} - \Sigma\bar{X}Y_i + \Sigma\bar{X}\bar{Y}\\
+             &= \Sigma X_iY_i- \bar{Y}n\bar{X} - n\bar{Y}\bar{X} + n\bar{X}\bar{Y}\\
+             &= \Sigma X_iY_i - n \bar{X}\bar{Y}
+    \end{align}
+\end{proof}
+
+#### (b)
+
+##### (i)
+\begin{proof}
+    Show that $\hat{\beta}_1 = r \frac{s_Y}{s_X}$
+    \begin{align}
+      \hat{\beta}_1 &= \frac{S_{XY}}{S_{XX}}\\
+      &= \frac{\Sigma(X_i-\bar{X})(Y_i-\bar{Y})}{S_{XX}}\\
+      &= \frac{\Sigma(X_i-\bar{X})(Y_i-\bar{Y})}{s_X^2}\\
+      &= \frac{\Sigma(X_i-\bar{X})(Y_i-\bar{Y})s_Y}{s_X^2s_Y}\\
+      &= \frac{\Sigma(X_i-\bar{X})(Y_i-\bar{Y})}{s_Xs_Y}\cdot\frac{s_Y}{s_X}\\
+      &= r\cdot\frac{s_Y}{s_X}
+    \end{align}
+\end{proof}
+
+##### (ii)
+
+\begin{proof}
+    Show that $\frac{\hat{\beta}_1}{s.e(\hat{\beta}_1)}  = r\frac{\sqrt{n-2}}{\sqrt{1-r^2}}$
+    \begin{align}
+      \frac{\hat{\beta}_1}{s.e(\hat{\beta}_1)} &= \frac{r\frac{s_Y}{s_X}}{\sqrt{\frac{\hat{\sigma}^2}{S_{XX}}}}
+      = \frac{r\frac{s_Y}{s_X}}{\sqrt{\frac{\hat{\sigma}^2}{s_{X}^2}}}
+      = \frac{r\frac{s_Y}{s_X}}{\frac{\hat{\sigma}}{s_{X}}}
+      = \frac{r s_Y}{\hat{\sigma}} 
+      = \frac{r}{\frac{1}{s_Y}\sqrt{\frac{\Sigma e_i^2}{n-2}}} 
+      = \frac{r \sqrt{n-2}}{\frac{1}{s_Y}\sqrt{\Sigma e_i^2}} \\
+      &= \frac{r \sqrt{n-2}}{\frac{1}{s_Y}\sqrt{\Sigma (Y_i-\hat{\beta_0}-\hat{\beta_1}X_i)^2}} \\
+      &= \frac{r \sqrt{n-2}}{\frac{1}{s_Y}\sqrt{\Sigma (Y_i-\bar{Y}+\hat{\beta_1}\bar{X}-\hat{\beta_1}X_i)^2}} \\
+      &= \frac{r \sqrt{n-2}}{\frac{1}{s_Y}\sqrt{\Sigma ((Y_i-\bar{Y})-\hat{\beta_1}(X_i-\bar{X}))^2}} \\
+      &= \frac{r \sqrt{n-2}}{\frac{1}{s_Y}\sqrt{\Sigma ((Y_i-\bar{Y})^2 - 2(Y_i-\bar{Y})\hat{\beta_1}(X_i-\bar{X}) + \hat{\beta_1}^2(X_i-\bar{X})^2)}} \\
+      &= \frac{r \sqrt{n-2}}{\frac{1}{s_Y}\sqrt{s_Y^2 - 2\hat{\beta_1}S_{XY} + \hat{\beta_1}^2s_X^2}} \\
+      &= \frac{r \sqrt{n-2}}{\frac{1}{s_Y}\sqrt{s_Y^2 - 2r\frac{s_Y}{s_X}S_{XY} + \hat{\beta_1}^2s_X^2}} \\
+      &= \frac{r \sqrt{n-2}}{\frac{1}{s_Y}\sqrt{s_Y^2 - 2r\frac{s_Y}{s_X}r\cdot s_Xs_Y + \hat{\beta_1}^2s_X^2}}&& \text{Since } S_{XY} = rs_Xs_Y \\
+      &= \frac{r \sqrt{n-2}}{\frac{1}{s_Y}\sqrt{s_Y^2 - 2r^2s_Y^2 + \hat{\beta_1}^2s_X^2}}  \\
+      &= \frac{r \sqrt{n-2}}{\sqrt{\frac{s_Y^2}{s_Y^2} - 2r^2 \frac{s_Y^2}{s_Y^2}+ \hat{\beta_1}^2\frac{s_X^2}{s_Y^2}}} \\
+      &= \frac{r \sqrt{n-2}}{\sqrt{\frac{s_Y^2}{s_Y^2} - 2r^2 + r^2}} && \text{Since } \hat{\beta_1}\frac{s_X}{s_Y} = r \\
+      &= \frac{r \sqrt{n-2}}{\sqrt{1 - r^2}} 
+    \end{align}
+\end{proof}
+
+### Q.3 
+  
+#### (a) 
+Answer:
+
+```{r}
+n = 26
+XBar = 1613 / n
+YBar = 281.9 / n
+SXX =  3756.96 
+SYY = 465.34
+SXY = -757.64
+
+slope = SXY / SXX 
+intercept = YBar - slope * XBar
+
+```
+The slope is `r slope`  
+The intercept is `r intercept`
+
+#### (b) 
+Answer:
+
+```{r}
+SSE = SYY - slope^2*SXX # From lec 6, where syy = slope^2*sxx + see
+sigma2 = ( SSE) / (n - 2) # From lecture
+seB0 = sqrt((1/n + XBar^2/SXX)*sigma2)
+seB1 = sqrt(sigma2/SXX)
+```
+$$ s.e(\hat{\beta}_1) = `r seB1`$$
+$$ s.e(\hat{\beta}_1) = `r seB0`  $$  
+
+
+#### (c)
+Answer:
+
+
+```{r}
+alpha = 0.05
+
+slopeLower =  slope - (qt(1-alpha/2, n-2) * seB1   )
+slopeUpper = slope + (qt(1-alpha/2, n-2) * seB1 )
+
+intLower = intercept - (qt(1-alpha/2, n-2) * seB0 )
+intUpper = intercept + (qt(1-alpha/2, n-2) * seB0 )
+
+```
+The $95\%$ confidence interval for the true slope is $$[`r slopeLower`,`r slopeUpper`]$$  
+The $95\%$ confidence interval for the true intercept is $$[`r intLower`,`r intUpper`]$$
+
+
+#### (d)
+Answer:
+
+Since both Confidence Intervals do not contain the value 0, we can conclude that there is a significant linear relationship between age and levels of CBG. With 95% confidence we estimate that the change in CBG decreases by between .32 and .08 for each additional increase of patients. We can also that at age=0, a patient will have CBG in between 15.68 and 31.03 in them.
+
+### Q. 4  
+
+#### a)
+
+$$E = \Sigma(Y_i-\beta_1 X_i)^2 = \Sigma(Y_i^2 - 2Y_i\beta_1X_i + \beta_1^2 X_i^2)$$
+$$\frac{\partial E}{ \partial \beta_1} = -2\Sigma Y_iX_i+ 2\beta_i \Sigma X_i^2 $$
+$$\frac{\partial E}{ \partial \beta_1} = 0 \implies \beta_1 = \frac{\Sigma Y_iX_i}{\Sigma X_i^2 } \implies \hat{\beta_1} = \frac{\Sigma Y_iX_i}{ \Sigma X_i^2 }$$
+
+
+#### b) 
+
+I cannot conclude that $\Sigma e_i = 0$
+\begin{proof}
+  Suppose by contradiction, that $\Sigma e_i = 0$.\\
+  Then this holds for $$X^\prime = X_{1:2} = \{1,2\}, Y^\prime =Y_{1:2} = \{2,1\}$$ \\\\
+  However,
+  \begin{align}
+       \Sigma e_i &=\Sigma (Y_i - \hat{Y_i}) = \Sigma (Y_i - \frac{\Sigma Y_iX_i}{\Sigma X_i^2 } X_i)\\
+       (\Sigma e_i)\rvert_{X^\prime,Y^\prime} &= Y_1 - \frac{Y_1X_1 + Y_2X_2}{X_1^2 + X_2^2  } X_1 + Y_2 - \frac{Y_1X_1 + Y_2X_2 }{X_1^2 +X_2^2  } X_2\\
+                  &= 2 - \frac{2 \cdot 1 + 1 \cdot 2}{1^2 + 2^2  } 1 + 1 - \frac{2 \cdot 1 + 1 \cdot 2}{1^2 +2^2  } 2\\
+                  &= 2 - \frac{4}{5} + 1 - \frac{4}{5} 2\\
+                  &= \frac{2}{5} \neq 0\\
+  \end{align}
+  as we can see, there is an counterexample for $\Sigma e_i = 0$, therefore we cannot conclude that $$\Sigma e_i = 0$$
+\end{proof}
+
+#### c) 
+
+\begin{align}
+      s.e(\beta_1) &= Var(\Sigma e_i)\rvert_{\sigma^2 = \hat{\sigma^2}}\\
+                   &= Var(\frac{\Sigma X_iY_i}{\Sigma X_i^2})\rvert_{\sigma^2 = \hat{\sigma^2}}\\
+                  &= \frac{1}{(\Sigma X_i^2)^2}Var(\Sigma X_iY_i)\rvert_{\sigma^2 = \hat{\sigma^2}}\\
+                  &= \frac{1}{(\Sigma X_i^2)^2}\Sigma X_i^2Var(Y_i)\rvert_{\sigma^2 = \hat{\sigma^2}}\\
+                  &= \frac{\hat{\sigma^2}}{(\Sigma X_i^2)^2}(\Sigma X_i)^2\\
+                  &= \frac{\hat{\sigma^2}}{\Sigma X_i^2}  
+\end{align}
+
+$$
+
+
+#### d)
+
+$$      t^* = \frac{\hat{\beta_1} - \beta_1}{s.e(\beta_1)} = \frac{\hat{\beta_1} \Sigma X_i^2}{\hat{\sigma^2}}$$
+If  $2\cdot P(t_(n-2) \geq |t^*|) < \alpha$
+, then we reject  the hypothesis, otherwise, we are unable to reject.
+
+
+#### e)
+
+Note that $$\text{MLE of } \beta_1 = \hat{\beta_1} = \frac{\Sigma Y_iX_i}{ \Sigma X_i^2 }$$
+```{r}
+numerator = 0
+denomerator = 0
+data = data.frame(X = c(7,12,4,14,25,30),
+                  Y = c(128,213,75,250,446,540))
+
+for(i in seq_len(nrow(data))) { # zip X and Y
+  numerator  = numerator + (data[i,1] * data[i,2]) # increment X_i * Y_i
+  denomerator = denomerator + data[i,1]^2 # increment X_i^2
+}
+ 
+beta1MLE = numerator / denomerator
+```
+
+the MLE of $\beta_1$ is `r beta1MLE`  
+
+### Q. 5  
+
+\begin{proof}
+
+  Show that $Var(\hat{\beta_1})\leq Var(\hat{\beta_1^*})$\\
+  Note: since $\hat{\beta_1^*}$ is an unbiased estimator, 
+  $$E(\hat{\beta_1^*}) =  \Sigma c_1\beta_0 + \beta_1 \Sigma c_iX_i = \beta_1 \implies \Sigma c_i = 0 \land  \Sigma c_iX_i = 1$$
+  let $$c_i = k_i - p_i, \text{where } k_i = \frac{X_i-\bar{X}}{\Sigma (X_i-\bar{X})^2}$$ 
+  \begin{align}
+    Var(\hat{\beta_1^*}) &= \sigma^2\Sigma(k_i - p_i)^2\\
+                        &= \sigma^2(\Sigma k_i^2  + 2\Sigma k_ip_i + \Sigma p_i^2)\\
+                        &\geq \sigma^2(\Sigma k_i^2  + 2\Sigma k_ip_i )\\
+                        &= \sigma^2(\Sigma k_i^2  + 2\Sigma k_i(k_i-c_i)) && \text{Since } p_i = k_i - c_i \\
+                        &= \sigma^2(\Sigma k_i^2  + 2\Sigma (k_i^2-k_ic_i))\\
+                        &= \sigma^2(\Sigma k_i^2  + 2\Sigma k_i^2-2\Sigma k_ic_i))\\
+                        &= \sigma^2(\Sigma k_i^2  + 2\Sigma 
+                        \frac{1}{\Sigma (X_i - \bar{X})^2}-2\Sigma \frac{X_i - \bar{X}}{\Sigma (X_i - \bar{X})^2} c_i)\\
+                        &= \sigma^2(\Sigma k_i^2  + 2\Sigma
+                        \frac{1}{\Sigma (X_i - \bar{X})^2}-2\frac{\Sigma c_iX_i - \Sigma  c_i\bar{X}}{\Sigma (X_i - \bar{X})^2})\\
+                        &= \sigma^2(\Sigma k_i^2  + 2\Sigma
+                        \frac{1}{\Sigma (X_i - \bar{X})^2}-2\frac{1 - 0}{\Sigma (X_i - \bar{X})^2}) && \text{Since } \Sigma c_i = 0 \land  \Sigma c_iX_i = 1 \\
+                        &= \sigma^2(\Sigma k_i^2)\\
+                        &\geq \sigma^2(\Sigma k_i) = Var(\hat{\beta_1})
+  \end{align}
+\end{proof}
+
+### Q. 6  
+
+```{r echo=FALSE}
+if (!require("readxl")) install.packages("readxl")
+library("readxl") # import lib to 
+```
+
+#### a)
+Answer :
+
+```{r}
+xls_data = read_excel("MiceWeightGain.xls") # import data
+
+plot(xls_data$x,
+     xls_data$y,
+     type= "p",
+     xlab = 'Nutrient Level',
+     ylab = 'Weight Gain',
+     main="Mice Weight Gain",
+     col = "red")
+```
+
+#### b) 
+Answer :
+```{r}
+plot(xls_data$x,
+     xls_data$y,
+     type= "p",
+     xlab = 'Nutrient Level',
+     ylab = 'Weight Gain',
+     main="Mice Weight Gain",
+     col = "red")
+
+abline(lm(y ~ x, data= xls_data))
+```
+
+#### c)
+Answer :
+
+```{r} 
+miceCorrelation = cor(xls_data$x, xls_data$y)
+```
+
+There is a strong positive association between weight change and nutrient level as the correlation is `r  miceCorrelation`
+
+#### d)
+Answer :
+```{r}
+CI = confint(lm(y ~ x, data= xls_data), 'x', level = 0.95)
+```
+
+The $95\%$ confidence interval for the mean change in weight as nutrient level is increased by 1 unit is 
+
+$$[`r CI[1]`,`r CI[2]`]$$
+
