@@ -87,19 +87,20 @@ Yhat0 =  Bhat0 + Bhat1 * X0
 Yhat0
 ```
 
-Since we know 
-$$E(Y_0) = \hat{Y_0} \sim N(\mu, \sigma^2),\text{where } \mu =  \hat{\beta_0} + \hat{\beta_1} \cdot X_0 = `r Bhat0` + `r Bhat1` \cdot `r X0` = `r Bhat0 + Bhat1 * X0`, \quad \sigma^2 = 25 $$
 ```{r}
-lower = qnorm(0.025, Bhat0+Bhat1 * X0, 5)
-upper = qnorm(0.975, Bhat0+Bhat1 * X0, 5)
+fit = lm(formula = Ys ~ Xs)
+CI = predict(fit, data.frame(Xs=10), interval="confidence")
 ```
-The 95% confidence interval for E(Y0) when X0 = 10 is given by $$[`r lower`, `r upper`]$$
+The 95% confidence interval for E(Y0) when X0 = 10 is given by $$[`r CI[2]`, `r CI[3]`]$$
 
 ### c)
 
 ```{r}
 Bhat0s = rep(0,1000)
 Bhat1s = rep(0,1000)
+lowers = rep(0,1000)
+uppers = rep(0,1000)
+
 Xs = c(4, 8, 12, 16, 20)
 
 for (i in 1:length(Bhat0s)) {
@@ -113,7 +114,10 @@ for (i in 1:length(Bhat0s)) {
   
   Bhat0s[i] = fit$coefficients[1]
   Bhat1s[i] = fit$coefficients[2]
-}
+  CI = predict(fit, data.frame(Xs=10), interval="confidence")
+  lowers[i] = CI[2]
+  uppers[i] = CI[3]
+ }
 ```
 ```{r}
 hist(Bhat1s, xlab = "beta 1 hat")
@@ -135,46 +139,32 @@ The sample standard deviation of $`r sd(Bhat0s)`$ is consistent with the theoret
 
 ### d)
 
-The 95% confidence interval for E(Y0) when X0 = 10 is given by $$[`r lower`, `r upper`]$$
+
 ```{r}
 numsWithinCI = 0
 
-for (i in 1:length(Bhat0s)) {
-  Y0 = Bhat0s[i] + Bhat1s[i] * X0
-  
-  if (Y0 > lower && Y0 < upper){
-    numsWithinCI = numsWithinCI + 1
-  }
-  #print(Y0)
-}
-numsWithinCI
-```
-
-
-```{r}
-Ey = 20 + 4 * X0
-
-numsWithinCI = 0
-
-for (i in 1:length(Bhat0s)) {
-  lower = qnorm(0.025, Bhat0s[i]+ Bhat1s[i] * X0, 5)
-  upper = qnorm(0.975, Bhat0s[i]+ Bhat1s[i] * X0, 5)
-
-
-  if (Ey > lower && Ey < upper){
+for (i in 1:length(lowers)) {
+  Ey = 20 + 4*X0
+  if (Ey > lowers[i] && Ey < uppers[i]){
     numsWithinCI = numsWithinCI + 1
   }
 }
 numsWithinCI
 ```
+This result of 951/1000 is consistent with the theoretical proportion of 950/1000
 
 
+## Q4
+### a)
 
+#### 1)
 
-
-
-
-
+```{r}
+Xs = c(3,5,4,6,7)
+Ys = c(4,6.5,5,7,7.5)
+fit = lm(formula = Ys ~ Xs,x=TRUE)
+model.matrix(fit)
+```
 
 
 
