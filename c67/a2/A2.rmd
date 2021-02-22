@@ -2,11 +2,13 @@
 title: "A2"
 author: "Jefferson Li, Arib Shaikh"
 date: "15/02/2021"
+output:
+  pdf_document: default
+  html_document:
+    df_print: paged
 header-includes:
-   - \usepackage{amsthm}
-   - \usepackage{accents}
-output: pdf_document
-
+- \usepackage{amsthm}
+- \usepackage{accents}
 ---
 Set Seed
 ```{r seed}
@@ -37,7 +39,7 @@ We want to calculate,
 \begin{align}
     P(|\hat{\beta_1} - \beta_1| >1)
     &= P(|\hat{\beta_1} - 4| >1)\\
-    &= P(\hat{\beta_1} - 4 > 1) \quad or \quad P(\hat{\beta_1} - 4 < -1)\\
+    &= P(\hat{\beta_1} - 4 > 1 \quad \lor \quad \hat{\beta_1} - 4 < -1)\\
     &= P(\hat{\beta_1} > 5)+ P(\hat{\beta_1}< 3) && \text{Since they are disjoint}
 \end{align}
 
@@ -97,6 +99,7 @@ The 95% confidence interval for E(Y0) when X0 = 10 is given by $$[`r CI[2]`, `r 
 ### c)
 
 ```{r}
+set.seed(1005057368) 
 Bhat0s = rep(0,1000)
 Bhat1s = rep(0,1000)
 lowers = rep(0,1000)
@@ -154,6 +157,188 @@ numsWithinCI
 ```
 This result of 951/1000 is consistent with the theoretical proportion of 950/1000
 
+## Q2
+### a)
+```{r}
+Data <-read.csv("NHLhtwt.csv")
+X <- Data$Height
+Y <- Data$Weight
+fit <- lm(Y~X)
+summary(fit)
+b_0 = fit$coefficients[1]
+b_0
+b_1 = fit$coefficients[2]
+b_1
+```
+```{r}
+### By Hand Calcuation
+x0 = 74
+n=717
+y0_hat = -163.348309 + 4.992666*(x0)
+sxx = sum((X - mean(X))^2)
+sigma_hat = 11.08
+se = sigma_hat*sqrt(1/n + 1/sxx*(x0-mean(X))^2)
+lower_int = y0_hat - qt(0.975, n-2)*se
+lower_int
+upper_int = y0_hat + qt(0.975, n-2)*se
+upper_int
+
+```
+```{r}
+#Using Built-in R Function
+
+new_fit <- data.frame(X=74)
+predict(fit, new_fit, interval = "confidence")
+```
+So we can conclude that our 95% Confidence Interval is [205.2458, 206.9721], and based on our calculations, we can see that the Confidence Interval calculation is the same whether we use by-hand, or the built-in R function.
+
+### b)
+```{r}
+# By "Hands"
+spred = sigma_hat*sqrt(1+ 1/n + 1/sxx*(x0-mean(X))^2)
+lower_int = y0_hat - qt(0.975, n-2)*spred
+lower_int
+upper_int = y0_hat + qt(0.975, n-2)*spred
+upper_int
+
+#Using Built-in R function
+predict(fit, new_fit, interval = "prediction")
+```
+So we can conclude that our prediction interval is [184.3326, 227.8853], and based on the values we got from using by hands and built-in R function, we ended up with the same value.
+
+### c)
+```{r}
+resid = fit$residuals
+pred = fit$fitted.values
+plot(pred, resid, pch=20, col="red")
+abline(c(0,0))
+
+```
+
+### d)
+
+```{r}
+qqnorm(resid)
+qqline(resid)
+```
+```{r}
+shapiro.test(resid)
+```
+Since we observed that the p-value of this is less than 0.005, by the Shapiro test, we reject the hypothesis that the data is normally distributed.
+
+### e)
+```{r}
+btest <- function(resid_data, med_data){
+
+resid1 <- subset(resid_data, Height>med_data)$resid
+resid2 <- subset(resid_data, Height<=med_data)$resid
+n1 = length(resid1)
+n2 = length(resid2)
+
+d1 = abs(resid1-median(resid1))
+d2 = abs(resid2-median(resid2))
+
+d1_mean = mean(d1)
+d1_var = var(d1)
+
+d2_mean = mean(d2)
+d2_var = var(d2)
+
+s2 = ((n1-1)*d1_var + (n2-1)*d2_var)/(n1+n2-2)
+
+t1 = qt(0.975, n1+n2-2)
+
+tBF = abs((d1_mean-d2_mean)/(sqrt(s2)*(sqrt((1/n1)+(1/n2)))))
+return(list(tBF=tBF, t1=t1))
+
+}
+resid_data = data.frame(resid, Height = c(Data$Height))
+med_data = median(Data$Height)
+test <- btest(resid_data, med_data)
+test$tBF
+test$t1
+```
+As we can see, the tBF value is greater than our t-test, so we can reject our H0 that states that there is equal variance among errors.
+
+### f)
+
+```{r}
+library(MASS)
+result = boxcox(fit)
+rfit <- lm(result$y~result$x)
+
+```
+```{r}
+f_resid = rfit$residuals
+f_pred = rfit$fitted.values
+plot(f_pred, f_resid, pch=20, col="red")
+abline(c(0,0))
+```
+```{r}
+qqnorm(f_resid)
+qqline(f_resid)
+```
+```{r}
+shapiro.test(f_resid)
+```
+Since we observed that the p-value of this is less than 0.005, by the Shapiro test, we reject the hypothesis that the data is normally distributed.
+
+```{r}
+f_resid_data = data.frame(resid = f_resid, Height = c(result$x))
+f_med_data = median(result$x)
+test <- btest(resid_data = f_resid_data, med_data = f_med_data)
+test$tBF
+test$t1
+```
+Since we see that our tBF,  0.04996998 is less than 1.984467, we do not reject $$H_0$$, which states that there is equal variance among errors.
+
+## Q3 
+
+### a)
+Note that the least squares estimator of $$
+\hat{\beta} = (X'X)^{-1} X'Y$$
+We will use R to create and compute the matrices as given in the question.
+```{r}
+X = matrix( 
+   c(1, -9,  3,
+     1, -7, -7,
+     1, -5,  7,
+     1, -3, -9,
+     1, -1,  1,
+     1,  1,  5,
+     1,  3, -1,
+     1,  5, -3,
+     1,  7, -5,
+     1,  9,  9), # the data elements 
+   nrow=10,              # number of rows 
+   ncol=3,              # number of columns 
+   byrow = TRUE)        # fill matrix by rows `
+#t(X)
+Y = matrix(c(34,16,26,35,32,11,24,1,-3,15),nrow = 10,ncol=1, byrow=TRUE)
+
+A = (1/1067840)*matrix(
+  c(106784,   0,   0,
+    0     ,3300,-460,
+    0     ,-460,3300), nrow = 3, ncol = 3, byrow = TRUE)
+betahat = A %*% t(X) %*% Y
+betahat
+```
+From this, we can see that our least square estimators, $$\hat{\beta_0},\hat{\beta_1},\hat{\beta_2}$$  are given by $$\hat{\beta} = [`r betahat`]$$
+
+### b)
+Note that the formula to find the vector of fitted values $$ \hat{Y} = X\hat{\beta} $$, so we will compute this first using R.
+After, to find an unbiased estimate of error variance, we use this formula: $$ \hat{\sigma^2} = 1/(n-3) *e'e$$, where $$ e = Y - \hat{Y} $$
+We will use R to compute as needed.
+```{r}
+Yhat = X %*% betahat
+Yhat
+ei = Y - Yhat
+var = (t(ei)%*%ei)
+sigma2 = var/7
+sigma2
+```
+Our fitted value vector is given by $$[`r Yhat`]$$.
+Our unbiased estimate for error variance is `r sigma2 `. 
 
 ## Q4
 ### a)
@@ -175,7 +360,8 @@ coeffs
 
 ### 3)
 ```{r}
-varCovarMatrix = solve(t(designMatrix)%*%designMatrix)
+sigma2=4
+varCovarMatrix = solve(t(designMatrix)%*%designMatrix) *sigma2
 varCovarMatrix
 ```
 
@@ -208,7 +394,7 @@ H
 
 ```{r}
 sigma2 = 4
-VarE = (1 - H)*sigma2
+VarE = (diag(5) - H)*sigma2
 VarE
 ```
 
