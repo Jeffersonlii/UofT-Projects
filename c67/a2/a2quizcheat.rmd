@@ -1,0 +1,71 @@
+---
+title: "Untitled"
+author: "Jefferson Li"
+date: "24/02/2021"
+output: pdf
+---
+Q1:
+```{r}
+Xs = c(1,2,3,4,5)
+Sxx = 0
+for (x in Xs) {
+  Sxx = Sxx + (x - mean(Xs))^2
+}
+Sxx
+```
+
+```{r}
+sd = 1
+ans = pnorm(-1,0,sd) + (1-pnorm(1,0,sd))
+ans
+```
+
+Q2, Q3:
+```{r}
+Xs =  c(24.62, 24.70, 25.70, 25.80, 26.20, 26.30, 26.60, 26.80, 27.20, 27.35) 
+Ys = c(17.10, 17.15, 17.20, 17.24, 17.25, 17.30, 17.32, 17.40, 17.60, 17.80)
+X0 = 27
+
+predict(lm(formula = Ys~Xs),data.frame(Xs = X0),interval="confidence",level=0.95)
+```
+Q4:
+```{r}
+Xs =  c(24.62, 24.70, 25.70, 25.80, 26.20, 26.30, 26.60, 26.80, 27.20, 27.35) 
+Ys = c(17.10, 17.15, 17.20, 17.24, 17.25, 17.30, 17.32, 17.40, 17.60, 17.80)
+
+X0 = 27
+
+predict(lm(formula = Ys~Xs),data.frame(Xs = X0),interval="prediction",level=0.95)
+```
+
+Q5:
+resid x Y 
+
+IS clearly a trumpet shpae,
+this means non constance variance of error
+can be detected by brown forsyth or levenes test
+
+non straight QQ is normality (shapiro test)
+
+
+Q6:
+number of observations is top left value of X`X
+
+Q7:
+sum of Yi is first value of X`Y
+
+Q8
+notes
+
+```{r}
+b = matrix(
+  c(7.7761,
+    9.3366), nrow = 2, ncol = 1, byrow = TRUE)
+xy = matrix(
+  c(1051,
+    5439.48), nrow = 2, ncol = 1, byrow = TRUE)
+
+ans = t(t(b)%*%xy)
+ans
+```
+
