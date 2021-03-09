@@ -1,0 +1,40 @@
+```{r}
+A = (1/1)*matrix(
+  c(106784,   0,   0,
+    0     ,3300,-460,
+    0     ,-460,3300), nrow = 3, ncol = 3, byrow = TRUE)
+solve(t(A) %*% A)
+```
+
+```{r}
+#q6
+prob = pnorm(4, 0, sqrt(4))
+prob
+```
+
+```{r}
+#q7
+
+Distance <- c(3.4, 1.8, 4.6, 2.3, 3.1, 5.5, 0.7, 3.0, 2.6, 4.3, 2.1, 1.1, 6.1, 4.8, 3.8)
+
+Fire.damage <- c(26.2, 17.8, 31.3, 23.1, 27.5, 36.0, 14.1, 22.3, 19.6, 31.3, 24.0, 17.3, 43.2, 36.4, 26.1)
+
+fit = lm(formula = Fire.damage ~ Distance)
+summary(fit)
+predict(fit, data.frame(Distance=3.5), interval="prediction", level=.99)
+```
+```{r}
+#q7
+
+Distance <- c(3.4, 1.8, 4.6, 2.3, 3.1, 5.5, 0.7, 3.0, 2.6, 4.3, 2.1, 1.1, 6.1, 4.8, 3.8)
+
+Fire.damage <- c(26.2, 17.8, 31.3, 23.1, 27.5, 36.0, 14.1, 22.3, 19.6, 31.3, 24.0, 17.3, 43.2, 36.4, 26.1)
+
+fit = lm(formula = Fire.damage ~ Distance)
+summary(fit)
+confint(fit,level=.99)
+lower = 4.9193 - qt(1-0.99/2,15-2)*0.3927
+lower
+upper = 4.9193 + qt(1-0.99/2,15-2)*0.3927
+upper
+```
