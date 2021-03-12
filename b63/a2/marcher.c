@@ -16,7 +16,6 @@
  */
 
 #include "marcher.h"
-
 /**
  * Input:
  *  - im:   The image we are working on. (Look at ImgUtils.h for struct defn.)
@@ -72,9 +71,76 @@
  *  the lab machines in BV473. (You can test remotely through SSH.)
  */
 double findPath(Image *mp, WeightFunc weight, int path[]) {
- 
-  path[0] = -1; // Terminate path
-  return 0.0;   // Replace with cost pf shortest path
+    int *parentPIndexes = calloc(mp->sx * mp->sy, sizeof(int));
+    int *chainLengths = calloc(mp->sx * mp->sy, sizeof(int));
+
+    double totalEnergy;
+    int targetIndex = (mp->sx - 1) + (mp->sy - 1) * mp->sx;
+    MinHeap *heap = newMinHeap(mp->sx * mp->sy);
+    for (int x = 0; x < mp->sx; x++) {  // init prio heap
+        for (int y = 0; y < mp->sy; y++) {
+            int pindex = x + y * mp->sx;
+            heapPush(heap, pindex, INFINITY);
+        }
+    }
+    heapDecreasePriority(heap, 0, 0);  // update starting point (0,0) to 0 prio
+
+    while (heap->numItems != 0) {  // while heap not empty
+        int optimalPIndex = heapExtractMin(heap, &totalEnergy);
+
+        if (optimalPIndex == targetIndex) break;
+
+        int optimalX = optimalPIndex % mp->sx;
+        int optimalY = optimalPIndex / mp->sx;
+
+        int consideringNeighbours[] = {-1,
+                                       -1,
+                                       -1,
+                                       -1};  // neighbours underconsideration for updates
+
+        if (optimalX + 1 < mp->sx) {  //can go right
+            consideringNeighbours[0] = optimalX + 1 + optimalY * mp->sx;
+        }
+        if (optimalX - 1 >= 0) {  //can go left
+            consideringNeighbours[1] = optimalX - 1 + optimalY * mp->sx;
+        }
+        if (optimalY + 1 < mp->sy) {  //can go down
+            consideringNeighbours[2] = optimalX + (optimalY + 1) * mp->sx;
+        }
+        if (optimalY - 1 >= 0) {  //can go up
+            consideringNeighbours[3] = optimalX + (optimalY - 1) * mp->sx;
+        }
+        // printf("\n\n\n start \n");
+
+        for (int i = 0; i < 4; i++) {
+            int neighbourIndex = consideringNeighbours[i];
+
+            if (neighbourIndex != -1) {
+                double newCost = weight(mp, optimalPIndex, neighbourIndex) + totalEnergy;  // calc new cost of going to that pixel.
+                double oldCost = heap->arr[heap->indices[neighbourIndex]].priority;
+                // printf("newcost = %f\n", weight(mp, optimalPIndex, neighbourIndex));
+
+                if (newCost < oldCost) {                                                     // check if its worth updating.
+                    heapDecreasePriority(heap, neighbourIndex, newCost);                     // update.
+                    *(parentPIndexes + neighbourIndex) = optimalPIndex;                      // store the parent of this node
+                    *(chainLengths + neighbourIndex) = 1 + *(chainLengths + optimalPIndex);  // update length of this chain
+                }
+            }
+        }
+    }
+
+    //find path
+    int currentIndex = targetIndex;
+
+    for (int i = *(chainLengths + targetIndex); i > 0; i--) {
+        path[i - 1] = *(parentPIndexes + currentIndex);
+        currentIndex = path[i - 1];
+    }
+
+    path[*(chainLengths + targetIndex)] = targetIndex;
+    path[*(chainLengths + targetIndex) + 1] = -1;
+    freeHeap(heap);
+    return totalEnergy;  // Replace with cost pf shortest path
 }
 
 /**
@@ -118,6 +184,16 @@ double findPath(Image *mp, WeightFunc weight, int path[]) {
  *     depend on anything else in your code other than the arguments passed in.
  */
 double allColourWeight(Image *im, int a, int b) {
+    int ax = a % im->sx;
+    int ay = a / im->sx;
+    int by = b / im->sx;
 
-  return 0; // Default return value
+    if ((ay == 20 || ay == 60 || ay == 100 || ay == 140 || ay == 180) && ay == by ||  // attract row fill
+
+        (ay == 40 || ay == 120) && ax == im->sx - 20 ||  // 2 points of low weight on right side
+
+        (ay == 80 || ay == 160) && ax == 20) {  // 2 points of low weight on left side
+        return 0;
+    }
+    return im->sy - ay + 1000;  // Default go straight down
 }

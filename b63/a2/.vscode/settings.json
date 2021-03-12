@@ -1,5 +1,7 @@
 {
     "files.associations": {
-        "minheap.h": "c"
+        "minheap.h": "c",
+        "marcher.h": "c",
+        "imgutils.h": "c"
     }
 }
