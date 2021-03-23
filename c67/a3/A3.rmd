@@ -13,20 +13,20 @@ header-includes:
 ## Q1
 ### a)
 ```{r}
-Data = read.table("PatientSatisfaction.txt",  col.names=c("Y", "X1", "X2", "X3"))
+Data = read.table("PatientSatisfaction.txt",  col.names=c("Satisfaction", "Age", "Severity", "Anxiety"))
 
 layout(matrix(c(1,1,2,3), 2, 2, byrow = TRUE))
-hist(Data$X1,
+hist(Data$Age,
   main="Patient Age",
   xlab="Age in Years",
   xlim=c(20,55),
 )
-hist(Data$X2,
+hist(Data$Severity,
   main="Severity of Illness",
   xlab="Index",
   xlim=c(40,65),
 )
-hist(Data$X3,
+hist(Data$Anxiety,
   main="Anxiety Level",
   xlab="Index",
   xlim=c(1.5,3),
@@ -41,8 +41,8 @@ It is noteworthy that it seems all 3 plots are normally distributed.
 ```{r}
 # scatter plot matrix
 
-pairs(~Y +X1 + X2+ X3, data = Data, lower.panel = panel.smooth)
-cor(cbind(Data$X1, Data$X2, Data$X3))
+pairs(~Satisfaction +Age + Severity+ Anxiety, data = Data, lower.panel = panel.smooth)
+cor(cbind(Data$Age, Data$Severity, Data$Anxiety))
 ```
 Our scatter plot matrix shows that all 3 predictor value are positively correlated with each other, however, all 3 are negatively correlated with patient satisfaction.
 
@@ -50,7 +50,7 @@ Since none of the correlations between the predictor variables exceed 0.7, the c
 
 ### c)
 ```{r}
-fit = lm(Y ~ X1 + X2 + X3, data = Data)
+fit = lm(Satisfaction ~ Age + Severity + Anxiety, data = Data)
 summary(fit)
 
 
@@ -103,12 +103,12 @@ Furthermore, since the adjusted $R^2$ value is close to $R^2$, we can say most p
 ### f)
 ```{r}
 #fit
-pred = predict(fit, data.frame(X1 = 35, X2 = 45, X3 = 2.2 ) , interval="prediction")
+pred = predict(fit, data.frame(Age = 35, Severity = 45, Anxiety = 2.2 ) , interval="prediction", level = 0.90)
 pred
 ```
 
 
-I am $95\%$ confident that a future patient with age 35, severity of illness 45, and anxiety level 2.2 will have a patient satisfaction within the range $$[`r pred[1,2]`, `r pred[1,3]`]$$
+I am $90\%$ confident that a future patient with age 35, severity of illness 45, and anxiety level 2.2 will have a patient satisfaction within the range $$[`r pred[1,2]`, `r pred[1,3]`]$$
 
 
 ## Q4
@@ -140,8 +140,8 @@ $$H_0 : \beta_6 = \beta_7 =\beta_8 = \beta_9 = 0$$
 $$H_a : \text{One of }\beta_6, \beta_7, \beta_8, \beta_9 \text{ is not }0$$
 
 ```{r}
-reducedFit = lm(Luminance ~ lnGrade + D1 + D2 + D3 + D4, data = Data)
-anova = anova(reducedFit, fullFit)
+reducedFitB = lm(Luminance ~ lnGrade + D1 + D2 + D3 + D4, data = Data)
+anova = anova(reducedFitB, fullFit)
 anova
 Pval = anova$`Pr(>F)`[2]
 Pval
@@ -157,8 +157,8 @@ $$H_0 :  \beta_2 =\beta_3 =\beta_4 = \beta_5 = \beta_6 = \beta_7 =\beta_8 = \bet
 $$H_a : \text{One of }\beta_2,\beta_3,\beta_4,\beta_5,\beta_6, \beta_7, \beta_8, \beta_9 \text{ is not }0$$
 
 ```{r}
-reducedFit = lm(Luminance ~ lnGrade, data = Data)
-anova = anova(reducedFit, fullFit)
+reducedFitC = lm(Luminance ~ lnGrade, data = Data)
+anova = anova(reducedFitC, reducedFitB)
 anova
 Pval = anova$`Pr(>F)`[2]
 Pval
@@ -211,5 +211,70 @@ plot(Data$lnGrade, resid(fullFit),
 From this plot, I visually access that there is no major deviate patterns, therefor 
 Independent/uncorrelated error terms is satisfied.
 
+# Question 5.
 
+```{r}
+WoolStrengthData <- read.table("StrengthWool.txt", header = TRUE)
+```
+## Part a.
+Fit a linear model with just main effects for the three class variables and
+show that this is not a good fit to the data
 
+```{r}
+Cycles = WoolStrengthData$Cycles
+lenCut <- cut(WoolStrengthData$Len, breaks=c(0,250, 300, 350), labels = c("250", "300", "350"))
+ampCut <- cut(WoolStrengthData$Amp, breaks=c(0,8,9,10), labels = c("8", "9", "10"))
+loadCut <- cut(WoolStrengthData$Load, breaks=c(0,40,45,50), labels=c("40", "45", "50"))
+fit <- lm(Cycles ~ lenCut + ampCut + loadCut, data = WoolStrengthData)
+summary(fit)
+
+residual <- fit$residuals
+fitted <- fit$fitted.values
+plot(x=fitted, y=residual)
+qqnorm(residual)
+qqline(residual)
+```
+If we look at the plot of the Residual Plot as well as the QQ Plot of the model, we can see that this model is not a good fit to the data, where the QQ Plot shows many points not following the linear line, as well as the curved shape in the residual plot not showing signs of a good fit.
+
+#5.b)
+```{r}
+
+new_fit <- lm(Cycles ~ ampCut + lenCut + loadCut + ampCut*lenCut + ampCut*loadCut + lenCut*loadCut, data = WoolStrengthData)
+summary(new_fit)
+new_residual <- new_fit$residuals
+new_fitted <- new_fit$fitted.values
+plot(x=new_fitted, y=new_residual)
+qqnorm(new_residual)
+qqline(new_residual)
+
+```
+If we look at the new residual plot of the new model, we can see that this model is a better fit to the data, as we can see that the variance is linear around 0 but does not have constant variance. Hence, the model which considers all the interactions between pairs of the class variables is a better model for fitting the data.
+
+## Part c.
+```{r}
+transformed_fit <- lm(log(Cycles)~(lenCut + ampCut + loadCut))
+
+summary(transformed_fit)
+transformed_residual <- transformed_fit$residuals
+transformed_fitted <- transformed_fit$fitted.values
+plot(x=transformed_fitted, y=transformed_residual)
+qqnorm(transformed_residual)
+qqline(transformed_residual)
+```
+
+After performing the log transformation on the model, we can see that the variance is constant and linear around 0. The high R/Radj values also show that almost all of the variance can be explained by the model. This is a better fit for the model.
+
+## Part d.
+```{r}
+transformed_fit2 <- lm(log(Cycles)~(ampCut + lenCut + loadCut + ampCut*lenCut + ampCut*loadCut + lenCut*loadCut))
+
+summary(transformed_fit2)
+transformed_residual <- transformed_fit2$residuals
+transformed_fitted <- transformed_fit2$fitted.values
+plot(x=transformed_fitted, y=transformed_residual)
+qqnorm(transformed_residual)
+qqline(transformed_residual)
+anova(transformed_fit, transformed_fit2)
+```
+
+We can see that the result of this is very similar to that of part c. However, it is not a significant change in terms of deciding a better fit, and we can use F-test. Since the p-value of F-test is 0.1325 > 0.05, With 95% confidence we cannot reject H0 as there is evidence that the interaction terms have no effect on the model with transformations
