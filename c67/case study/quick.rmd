@@ -1,0 +1,25 @@
+---
+title: "quick analysis"
+author: ""
+date: "09/03/2021"
+output:
+  pdf_document: default
+  html_document:
+    df_print: paged
+header-includes:
+- \usepackage{amsthm}
+- \usepackage{accents}
+---
+
+```{r}
+library("readxl")
+data=read_excel("BloodPressure.xlsx")
+data
+
+pairs(sbp ~ exercise + age + weight , data= data, upper.panel = panel.smooth)
+pairs(sbp ~ height + overwt + race + alcohol + trt + bmi , data= data, upper.panel = panel.smooth)
+pairs(sbp ~ stress + salt + chldbear + income + educatn , data= data, upper.panel = panel.smooth)
+
+
+```
+
