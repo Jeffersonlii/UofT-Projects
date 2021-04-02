@@ -31,7 +31,17 @@
 //
 //        (3) All the bits should be 0 at the start.
 BloomFilter *newBloomFilter(int num_bits, int num_hash, HashFunc *funcs) {
-  return NULL;
+    BloomFilter *nBF = calloc(sizeof(BloomFilter), 1);
+
+    nBF->num_bits = num_bits;
+    nBF->num_hash = num_hash;
+
+    nBF->data = calloc(sizeof(unsigned char), (num_bits + 7) / 8);
+    nBF->funcs = calloc(sizeof(HashFunc), num_hash);
+    for (int i = 0; i < num_hash; i++) {
+        nBF->funcs[i] = funcs[i];
+    }
+    return nBF;
 }
 
 // @brief Add a string to the BloomFilter
@@ -42,11 +52,14 @@ BloomFilter *newBloomFilter(int num_bits, int num_hash, HashFunc *funcs) {
 // @TODO: Implement this function. The macros defined in BloomFilter.h will
 //        be useful here. For example, to get the value of the 10th bit in
 //        the BloomFilter, call `GETBIT(bf->data, 10)`.
-//        
+//
 //        To get the index of the bitmap for a hash function, do:
 //               index = hash(str) % num_bits
 void BloomFilter_Add(BloomFilter *bf, const char *str) {
-  return;
+    for (int i = 0; i < bf->num_hash; i++) {
+        SETBIT(bf->data, bf->funcs[i](str) % bf->num_bits);
+    }
+    return;
 }
 
 // @brief Check if the BloomFilter thinks the string is in it or not.
@@ -58,9 +71,13 @@ void BloomFilter_Add(BloomFilter *bf, const char *str) {
 //             NOTE: returning 1 does NOT mean str was actually added into
 //                   the BloomFilter! Remember how queries work here...
 //
-// @TODO: Implement this function. Compute the index (for each HashFunc) 
+// @TODO: Implement this function. Compute the index (for each HashFunc)
 //        as above, using:
 //               index = hash(str) % num_bits
 int BloomFilter_Check(BloomFilter *bf, const char *str) {
-  return 0;
+    for (int i = 0; i < bf->num_hash; i++) {
+        if (GETBIT(bf->data, bf->funcs[i](str) % bf->num_bits) != 1)
+            return 0;
+    }
+    return 1;
 }

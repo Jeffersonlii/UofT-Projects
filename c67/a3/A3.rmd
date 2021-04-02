@@ -116,15 +116,17 @@ I am $90\%$ confident that a future patient with age 35, severity of illness 45,
 
 ```{r}
 Data = read.table("egyptcttn.txt",  col.names=c("Variety", "Luminance", "lnGrade"))
-D1 = as.numeric(Data$Variety=="Giza67")
-D2 = as.numeric(Data$Variety=="Giza68")
-D3 = as.numeric(Data$Variety=="Giza69")
-D4 = as.numeric(Data$Variety=="Giza70")
+D1 = as.numeric(Data$Variety=="Giza68")
+D2 = as.numeric(Data$Variety=="Giza69")
+D3 = as.numeric(Data$Variety=="Giza70")
+D4 = as.numeric(Data$Variety=="Menoufi")
 
 # base = Menoufi
 
 fullFit = lm(Luminance ~ lnGrade*D1 + lnGrade*D2 + lnGrade*D3 + lnGrade*D4, data = Data)
 summary(fullFit)
+ffit = lm(Luminance ~ lnGrade*factor(Data$Variety), data = Data)
+summary(ffit)
 
 ```
 Full Model :
